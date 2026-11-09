@@ -2,8 +2,11 @@
 <html lang="pt-BR" data-theme="light">
 <head>
   <meta charset="utf-8">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>LR Engenharia · Cockpit Operacional (ClickUp & Monday Edition)</title>
+  <title>LR Engenharia</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📐</text></svg>">
   
   <!-- Fontes Premium: Plus Jakarta Sans, Inter & JetBrains Mono -->
@@ -3030,7 +3033,7 @@
 
     function showCloudSyncInfo() {
       if (cloudStatus === "synced") {
-        showToast("As alterações estão sincronizadas com a nuvem.", "⚡");
+        showToast("As alterações estão sincronizadas com a nuvem.", "✓");
       } else if (cloudStatus === "saving") {
         showToast("Salvando alterações em nuvem...", "⏳");
       } else if (cloudStatus === "offline" || cloudStatus === "rules-locked") {
@@ -3162,6 +3165,8 @@ e clique em Publicar.`);
     // Sistema de Notificação Toast Fluido
     function showToast(msg, icon = "✓") {
       const container = document.getElementById("toast-container");
+      if (!container) return;
+      container.innerHTML = "";
       const toast = document.createElement("div");
       toast.className = "toast";
       toast.innerHTML = `<span style="color:var(--st-done); font-weight:800; font-size:15px;">${icon}</span> <span>${escapeHTML(msg)}</span>`;
