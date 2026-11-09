@@ -17,6 +17,10 @@
   <!-- Canvas Confetti para celebração tátil ao concluir obras -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
 
+  <!-- Firebase 10 Compat SDK (Banco em Nuvem em Tempo Real) -->
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+
   <!-- Motor de Efeitos Sites Incríveis -->
   <link rel="stylesheet" href="sites-incriveis.css">
   
@@ -1943,6 +1947,61 @@
       .nav-tabs { order: 3; width: 100%; justify-content: space-between; overflow-x: auto; }
       .header-actions { margin-left: auto; }
     }
+    /* Badge de Sincronização em Nuvem (Firebase) */
+    .sync-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-size: 11.5px;
+      font-weight: 600;
+      background: var(--bg-subtle);
+      border: 1px solid var(--bd);
+      color: var(--tx-dim);
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.2s ease;
+    }
+    .sync-badge:hover {
+      background: var(--sf);
+      border-color: var(--ac);
+      transform: translateY(-1px);
+    }
+    .sync-dot {
+      width: 7.5px;
+      height: 7.5px;
+      border-radius: 50%;
+      background: #a0aec0;
+      display: inline-block;
+      transition: all 0.3s ease;
+    }
+    .sync-badge.synced {
+      background: var(--st-done-bg);
+      border-color: rgba(0, 200, 117, 0.3);
+      color: #007a47;
+    }
+    .sync-badge.synced .sync-dot {
+      background: var(--st-done);
+      box-shadow: 0 0 6px rgba(0, 200, 117, 0.8);
+    }
+    .sync-badge.saving {
+      background: #fff8e6;
+      border-color: rgba(253, 171, 61, 0.4);
+      color: #b76e00;
+    }
+    .sync-badge.saving .sync-dot {
+      background: var(--st-appr);
+      box-shadow: 0 0 6px rgba(253, 171, 61, 0.8);
+    }
+    .sync-badge.offline {
+      background: #fff0f0;
+      border-color: rgba(226, 68, 92, 0.3);
+      color: #c5221f;
+    }
+    .sync-badge.offline .sync-dot {
+      background: #e2445c;
+    }
   </style>
 </head>
 <body>
@@ -1981,6 +2040,11 @@
 
       <!-- Ações do Header (Tema e Usuário) -->
       <div class="header-actions">
+        <!-- Badge de Sincronização Nuvem em Tempo Real -->
+        <div class="sync-badge" id="cloud-sync-badge" onclick="showCloudSyncInfo()" title="Status da sincronização em nuvem">
+          <span class="sync-dot"></span>
+          <span id="cloud-sync-text">Conectando...</span>
+        </div>
         <button class="btn-quick-new" onclick="openProjectModal()">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
           Nova Obra
@@ -2778,14 +2842,152 @@
     } else {
       AppState.p.forEach(ensureCostFields);
     }
+    window.AppState = AppState;
+    // ==================== INTEGRAÇÃO FIREBASE FIRESTORE (TEMPO REAL) ====================
+    const firebaseConfig = {
+      apiKey: "AIzaSyDSNOxjzTQQgdCMK3XOK8YNSIokYVjJ3jE",
+      authDomain: "lr-engenharia-5d905.firebaseapp.com",
+      projectId: "lr-engenharia-5d905",
+      storageBucket: "lr-engenharia-5d905.firebasestorage.app",
+      messagingSenderId: "222121610330",
+      appId: "1:222121610330:web:dd8d3c25a09ed1613d9c63",
+      measurementId: "G-8RHFMVYPW7"
+    };
 
-    const saveState = () => {
+    const myClientId = "cli_" + Math.random().toString(36).substring(2) + "_" + Date.now();
+    let firestoreDb = null;
+    let isRemoteUpdating = false;
+    let cloudStatus = "connecting";
+    let cloudSaveTimeout = null;
+
+    function setSyncBadge(status, label) {
+      cloudStatus = status;
+      const badge = document.getElementById("cloud-sync-badge");
+      const text = document.getElementById("cloud-sync-text");
+      if (!badge || !text) return;
+      
+      badge.className = "sync-badge " + status;
+      text.textContent = label;
+    }
+
+    function showCloudSyncInfo() {
+      if (cloudStatus === "synced") {
+        showToast("Nuvem Ativa: todas as alterações sincronizam instantaneamente entre você e o Lucas!", "⚡");
+      } else if (cloudStatus === "saving") {
+        showToast("Salvando alterações em nuvem...", "⏳");
+      } else if (cloudStatus === "offline" || cloudStatus === "rules-locked") {
+        alert(`Sincronização em Nuvem:
+
+O banco de dados do Firebase já está conectado, mas as Regras de Acesso no Firestore precisam permitir gravação.
+
+No Firebase Console > Firestore Database > Regras (Rules), altere para:
+allow read, write: if true;
+e clique em Publicar.`);
+      } else {
+        showToast("Conectando ao banco de dados em nuvem...", "📡");
+      }
+    }
+
+    function initCloudDatabase() {
+      try {
+        if (typeof firebase !== "undefined") {
+          if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+          }
+          firestoreDb = firebase.firestore();
+          const docRef = firestoreDb.collection("cockpit").doc("lr-state");
+
+          setSyncBadge("connecting", "Conectando...");
+
+          docRef.onSnapshot((doc) => {
+            if (doc.exists) {
+              const data = doc.data();
+              if (data && Array.isArray(data.p) && data.p.length > 0) {
+                const isFromAnotherClient = data.senderId && data.senderId !== myClientId;
+                const remoteSig = JSON.stringify(data.p);
+                const localSig = JSON.stringify(AppState.p);
+
+                if (remoteSig !== localSig) {
+                  isRemoteUpdating = true;
+                  AppState.p = data.p;
+                  AppState.p.forEach(ensureCostFields);
+                  try {
+                    localStorage.setItem("lr-v1", JSON.stringify(AppState));
+                  } catch (e) {}
+                  refreshAll();
+                  if (typeof activeMemberName !== "undefined" && activeMemberName) {
+                    renderMemberModalData(activeMemberName);
+                  }
+                  isRemoteUpdating = false;
+                  if (isFromAnotherClient) {
+                    showToast("Atualizado da nuvem em tempo real!", "⚡");
+                  }
+                }
+              }
+              setSyncBadge("synced", "Nuvem Sincronizada");
+            } else {
+              console.log("Inicializando base de dados no Firebase...");
+              saveToCloud(true);
+            }
+          }, (err) => {
+            console.warn("Aviso Firestore Snapshot:", err);
+            if (err && err.code === "permission-denied") {
+              setSyncBadge("offline", "Regras Bloqueadas");
+            } else {
+              setSyncBadge("offline", "Modo Local");
+            }
+          });
+        } else {
+          setSyncBadge("offline", "Modo Local");
+        }
+      } catch (err) {
+        console.warn("Erro ao iniciar Firebase:", err);
+        setSyncBadge("offline", "Modo Local");
+      }
+    }
+
+    function saveToCloud(immediate = false) {
+      if (!firestoreDb || isRemoteUpdating) return;
+
+      setSyncBadge("saving", "Salvando na nuvem...");
+
+      const doSave = () => {
+        const docRef = firestoreDb.collection("cockpit").doc("lr-state");
+        docRef.set({
+          p: AppState.p,
+          senderId: myClientId,
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+          updatedBy: AppState.name || "Lucas"
+        }, { merge: true }).then(() => {
+          setSyncBadge("synced", "Nuvem Sincronizada");
+        }).catch(err => {
+          console.warn("Erro ao gravar no Firestore:", err);
+          if (err && err.code === "permission-denied") {
+            setSyncBadge("offline", "Regras Bloqueadas");
+          } else {
+            setSyncBadge("offline", "Modo Local");
+          }
+        });
+      };
+
+      if (immediate) {
+        doSave();
+      } else {
+        clearTimeout(cloudSaveTimeout);
+        cloudSaveTimeout = setTimeout(doSave, 300);
+      }
+    }
+
+    const saveState = (immediate = false) => {
+      window.saveState = saveState;
       try {
         localStorage.setItem("lr-v1", JSON.stringify(AppState));
       } catch (e) {
         console.error("Erro ao salvar:", e);
       }
+      saveToCloud(immediate);
     };
+
 
     // Disparador de Confetes ClickUp/Monday
     function triggerCelebration() {
@@ -4632,6 +4834,7 @@
     // Inicialização da Aplicação
     applyTheme(AppState.theme || "light");
     refreshAll();
+    initCloudDatabase();
   </script>
 </body>
 </html>
