@@ -1,0 +1,5 @@
+node_modules/
+verificacao/
+*.tmp
+.system_generated/
+test_new_features.mjs

@@ -1,0 +1,4637 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>LR Engenharia · Cockpit Operacional (ClickUp & Monday Edition)</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📐</text></svg>">
+  
+  <!-- Fontes Premium: Plus Jakarta Sans, Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Chart.js para telemetria gráfica -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  
+  <!-- Canvas Confetti para celebração tátil ao concluir obras -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+
+  <!-- Motor de Efeitos Sites Incríveis -->
+  <link rel="stylesheet" href="sites-incriveis.css">
+  
+  <style>
+    :root {
+      /* Paleta Monday.com & ClickUp Moderna (Tema Claro) */
+      --bg: #f5f6f8;
+      --bg-subtle: #ebedf2;
+      --sf: #ffffff;
+      --sf-hover: #f8fafc;
+      --tx: #1e2238;
+      --tx-dim: #5c6278;
+      --mu: #8993a4;
+      --bd: #dfe1e6;
+      --bd-light: #ebedf0;
+      
+      /* Cores de Acento ClickUp / Monday */
+      --ac: #0073ea;               /* Monday Electric Blue */
+      --ac-hover: #0060b9;
+      --ac-subtle: #e5f2ff;
+      --ac-tx: #0060b9;
+      
+      --purple: #7950f2;           /* ClickUp Purple Accent */
+      --purple-subtle: #f3f0ff;
+      
+      /* Status Vibrantes Monday.com */
+      --st-done: #00c875;          /* Monday Done Green */
+      --st-done-bg: #e6f9f1;
+      --st-done-hover: #00b067;
+      
+      --st-appr: #fdab3d;          /* Monday Working / Warning Amber */
+      --st-appr-bg: #fff8ec;
+      --st-appr-hover: #e89525;
+      
+      --st-dev: #579bfc;           /* Monday In Progress Blue */
+      --st-dev-bg: #edf5ff;
+      --st-dev-hover: #4088eb;
+      
+      --st-late: #e2445c;          /* Monday Stuck / Critical Red */
+      --st-late-bg: #fdebed;
+      --st-late-hover: #cc3349;
+      
+      /* Sombras e Elevações Suaves */
+      --sh-xs: 0 1px 3px rgba(30, 34, 56, 0.05);
+      --sh-sm: 0 2px 6px rgba(30, 34, 56, 0.06), 0 1px 2px rgba(30, 34, 56, 0.04);
+      --sh-md: 0 6px 16px -2px rgba(30, 34, 56, 0.08), 0 2px 6px -1px rgba(30, 34, 56, 0.04);
+      --sh-lg: 0 14px 34px -4px rgba(30, 34, 56, 0.12), 0 4px 12px -2px rgba(30, 34, 56, 0.04);
+      --sh-glow: 0 0 0 3px rgba(0, 115, 234, 0.2);
+      
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --radius-full: 9999px;
+      
+      --font-display: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+      --font-body: "Inter", system-ui, -apple-system, sans-serif;
+      --font-mono: "JetBrains Mono", monospace;
+    }
+
+    [data-theme="dark"] {
+      --bg: #0c1017;
+      --bg-subtle: #161b24;
+      --sf: #141923;
+      --sf-hover: #1c2230;
+      --tx: #f0f4fc;
+      --tx-dim: #9aa5b8;
+      --mu: #6b778c;
+      --bd: #232c3d;
+      --bd-light: #1b2332;
+      
+      --ac: #3898fc;
+      --ac-hover: #58a9fd;
+      --ac-subtle: rgba(56, 152, 252, 0.15);
+      --ac-tx: #7cb8fe;
+      
+      --purple: #9775fa;
+      --purple-subtle: rgba(151, 117, 250, 0.15);
+      
+      --st-done: #05df84;
+      --st-done-bg: rgba(5, 223, 132, 0.14);
+      --st-done-hover: #03c774;
+      
+      --st-appr: #ffb84d;
+      --st-appr-bg: rgba(255, 184, 77, 0.14);
+      --st-appr-hover: #ffa626;
+      
+      --st-dev: #60a5fa;
+      --st-dev-bg: rgba(96, 165, 250, 0.14);
+      --st-dev-hover: #7db7fb;
+      
+      --st-late: #ff5c75;
+      --st-late-bg: rgba(255, 92, 117, 0.16);
+      --st-late-hover: #f04862;
+      
+      --sh-xs: 0 1px 3px rgba(0, 0, 0, 0.4);
+      --sh-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
+      --sh-md: 0 8px 20px rgba(0, 0, 0, 0.5);
+      --sh-lg: 0 16px 40px rgba(0, 0, 0, 0.6);
+      --sh-glow: 0 0 0 3px rgba(56, 152, 252, 0.3);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    html {
+      font-size: 14.5px;
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--tx);
+      font-family: var(--font-body);
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      transition: background-color 0.25s ease, color 0.25s ease;
+    }
+
+    .container {
+      max-width: 1260px;
+      margin: 0 auto;
+      padding: 0 24px;
+      width: 100%;
+    }
+
+    /* ---------- CABEÇALHO ESTILO SAAS (CLICKUP/MONDAY) ---------- */
+    header {
+      background: var(--sf);
+      border-bottom: 1px solid var(--bd);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      box-shadow: var(--sh-xs);
+      transition: border-color 0.25s ease, background-color 0.25s ease;
+    }
+    
+    .nav-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 68px;
+      gap: 16px;
+    }
+
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .brand-logo {
+      height: 42px;
+      width: auto;
+      border-radius: var(--radius-sm);
+      background: #ffffff;
+      padding: 2px;
+      box-shadow: var(--sh-xs);
+      border: 1px solid var(--bd-light);
+      display: block;
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .brand-wrap:hover .brand-logo {
+      transform: scale(1.05) rotate(-1deg);
+    }
+
+    .brand-meta {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand-title {
+      font-family: var(--font-display);
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--tx);
+      line-height: 1.15;
+    }
+
+    .brand-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ac);
+      margin-top: 1px;
+    }
+
+    .brand-badge .pulse-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--st-done);
+      box-shadow: 0 0 0 2px var(--st-done-bg);
+      animation: pulse 2.2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.25); }
+    }
+
+    /* Navegação em Pílula Flutuante */
+    .nav-tabs {
+      display: flex;
+      align-items: center;
+      background: var(--bg-subtle);
+      border-radius: var(--radius-full);
+      padding: 4px;
+      gap: 3px;
+    }
+
+    .nav-btn {
+      background: transparent;
+      border: 0;
+      padding: 8px 18px;
+      border-radius: var(--radius-full);
+      font-family: var(--font-body);
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--tx-dim);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      white-space: nowrap;
+    }
+
+    .nav-btn:hover {
+      color: var(--tx);
+      background: rgba(255, 255, 255, 0.5);
+    }
+
+    [data-theme="dark"] .nav-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .nav-btn.active {
+      background: var(--sf);
+      color: var(--ac);
+      box-shadow: var(--sh-sm);
+    }
+
+    .nav-btn svg {
+      width: 15px;
+      height: 15px;
+      opacity: 0.75;
+      transition: transform 0.2s ease;
+    }
+    .nav-btn.active svg {
+      opacity: 1;
+      transform: scale(1.1);
+    }
+
+    /* Ações Rápidas no Header */
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-quick-new {
+      background: linear-gradient(135deg, var(--ac), var(--purple));
+      color: #fff;
+      border: 0;
+      border-radius: var(--radius-full);
+      padding: 7px 16px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 2px 8px rgba(0, 115, 234, 0.3);
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .btn-quick-new:hover {
+      transform: translateY(-1px) scale(1.02);
+      box-shadow: 0 4px 14px rgba(0, 115, 234, 0.4);
+    }
+    .btn-quick-new:active {
+      transform: translateY(0) scale(0.98);
+    }
+
+    .theme-toggle, .user-badge {
+      background: var(--sf);
+      border: 1px solid var(--bd);
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      font-family: inherit;
+      color: var(--tx);
+      transition: all 0.18s ease;
+    }
+
+    .theme-toggle {
+      width: 36px;
+      height: 36px;
+      justify-content: center;
+    }
+    .theme-toggle:hover {
+      background: var(--bg-subtle);
+      border-color: var(--tx-dim);
+    }
+
+    .user-badge {
+      padding: 4px 12px 4px 6px;
+      gap: 8px;
+      height: 36px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .user-badge:hover {
+      border-color: var(--ac);
+      box-shadow: var(--sh-xs);
+    }
+
+    .user-avatar {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--ac), var(--purple));
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-weight: 700;
+      font-size: 12px;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+    }
+
+    /* ---------- CONTEÚDO PRINCIPAL ---------- */
+    main {
+      flex: 1;
+      padding: 28px 0 60px;
+    }
+
+    .tab-view {
+      display: none;
+      animation: viewSlideIn 0.26s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .tab-view.active {
+      display: block;
+    }
+
+    @keyframes viewSlideIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Header das Telas */
+    .view-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 22px;
+      flex-wrap: wrap;
+    }
+
+    .view-title-group h1 {
+      font-family: var(--font-display);
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--tx);
+      line-height: 1.2;
+    }
+
+    .view-title-group p {
+      color: var(--tx-dim);
+      font-size: 14px;
+      margin-top: 2px;
+    }
+
+    .date-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--tx-dim);
+      background: var(--sf);
+      border: 1px solid var(--bd);
+      padding: 6px 14px;
+      border-radius: var(--radius-full);
+      box-shadow: var(--sh-xs);
+    }
+
+    /* =========================================================
+       DASHBOARD APROFUNDADO: PULSO E DISTRIBUIÇÃO MONDAY/CLICKUP
+       ========================================================= */
+    .dashboard-pulse-strip {
+      background: var(--sf);
+      border: 1px solid var(--bd);
+      border-radius: var(--radius-md);
+      padding: 16px 20px;
+      margin-bottom: 22px;
+      box-shadow: var(--sh-xs);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .pulse-strip-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--tx);
+    }
+
+    .segmented-pipeline-bar {
+      height: 14px;
+      width: 100%;
+      background: var(--bg-subtle);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+      display: flex;
+      box-shadow: inset 0 1px 2px rgba(0,0,0,0.06);
+    }
+
+    .pipeline-seg {
+      height: 100%;
+      transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      cursor: pointer;
+    }
+
+    .seg-done { background: var(--st-done); }
+    .seg-dev  { background: var(--st-dev); }
+    .seg-appr { background: var(--st-appr); }
+    .seg-late { background: var(--st-late); }
+
+    .pipeline-legend {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      flex-wrap: wrap;
+      font-size: 12px;
+      color: var(--tx-dim);
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: opacity 0.15s ease;
+    }
+    .legend-item:hover { opacity: 0.8; }
+    .legend-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 3px;
+    }
+
+    /* ---------- GRID DE KPIS SAAS ---------- */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 22px;
+    }
+
+    @media (max-width: 940px) {
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 540px) {
+      .kpi-grid { grid-template-columns: 1fr; }
+    }
+
+    .kpi-card {
+      background: var(--sf);
+      border: 1px solid var(--bd);
+      border-radius: var(--radius-md);
+      padding: 18px 20px;
+      box-shadow: var(--sh-xs);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 10px;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .kpi-card::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: transparent;
+      transition: background 0.2s ease;
+    }
+
+    .kpi-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--sh-md);
+      border-color: var(--ac);
+    }
+
+    .kpi-card.kpi-dev::after { background: var(--st-dev); }
+    .kpi-card.kpi-appr::after { background: var(--st-appr); }
+    .kpi-card.kpi-late::after { background: var(--st-late); }
+    .kpi-card.kpi-money::after { background: var(--st-done); }
+
+    .kpi-card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .kpi-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--tx-dim);
+    }
+
+    .kpi-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: var(--bg-subtle);
+      display: grid;
+      place-items: center;
+      color: var(--tx-dim);
+      flex: none;
+      transition: transform 0.2s ease;
+    }
+    .kpi-card:hover .kpi-icon {
+      transform: scale(1.1);
+    }
+
+    .kpi-val {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--tx);
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .kpi-card.alert-late {
+      background: linear-gradient(180deg, var(--st-late-bg), var(--sf) 60%);
+      border-color: rgba(226, 68, 92, 0.3);
+    }
+    .kpi-card.alert-late .kpi-val {
+      color: var(--st-late);
+    }
+
+    /* ---------- O PICO: RADAR TÁTICO HEROICO ---------- */
+    .spotlight-card {
+      background: linear-gradient(135deg, var(--sf) 0%, var(--sf-hover) 100%);
+      border: 1px solid var(--bd);
+      border-radius: var(--radius-lg);
+      padding: 24px 28px;
+      margin-bottom: 22px;
+      box-shadow: var(--sh-md);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .spotlight-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 5px;
+      height: 100%;
+      background: var(--ac);
+    }
+
+    .spotlight-card.is-late {
+      background: linear-gradient(135deg, var(--st-late-bg) 0%, var(--sf) 55%);
+      border-color: rgba(226, 68, 92, 0.4);
+    }
+    .spotlight-card.is-late::before {
+      background: var(--st-late);
+    }
+
+    .spotlight-card.is-urgent {
+      background: linear-gradient(135deg, var(--st-appr-bg) 0%, var(--sf) 55%);
+      border-color: rgba(253, 171, 61, 0.4);
+    }
+    .spotlight-card.is-urgent::before {
+      background: var(--st-appr);
+    }
+
+    .spotlight-main {
+      flex: 2 1 340px;
+    }
+
+    .spotlight-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ac);
+      margin-bottom: 6px;
+    }
+    .spotlight-card.is-late .spotlight-tag { color: var(--st-late); }
+    .spotlight-card.is-urgent .spotlight-tag { color: var(--st-appr); }
+
+    .spotlight-title {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--tx);
+      letter-spacing: -0.02em;
+      margin-bottom: 6px;
+    }
+
+    .spotlight-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13.5px;
+      color: var(--tx-dim);
+      flex-wrap: wrap;
+    }
+
+    .spotlight-details {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      flex: 1 1 240px;
+      border-left: 1px solid var(--bd);
+      padding-left: 28px;
+    }
+
+    @media (max-width: 800px) {
+      .spotlight-details {
+        border-left: 0;
+        padding-left: 0;
+        width: 100%;
+        justify-content: space-between;
+      }
+    }
+
+    .spotlight-col small {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--mu);
+      margin-bottom: 3px;
+    }
+
+    .spotlight-col b {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--tx);
+      font-family: var(--font-mono);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .spotlight-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* ---------- HORIZONTE DE 7 DIAS (AGENDA DA SEMANA) ---------- */
+    .weekly-horizon {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
+      margin-bottom: 22px;
+    }
+
+    @media (max-width: 860px) {
+      .weekly-horizon { grid-template-columns: repeat(4, 1fr); }
+    }
+    @media (max-width: 520px) {
+      .weekly-horizon { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .horizon-day {
+      background: var(--sf);
+      border: 1px solid var(--bd);
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      box-shadow: var(--sh-xs);
+      transition: all 0.18s ease;
+      cursor: pointer;
+    }
+    .horizon-day:hover {
+      border-color: var(--ac);
+      transform: translateY(-2px);
+      box-shadow: var(--sh-sm);
+    }
+    .horizon-day.is-today {
+      border-color: var(--ac);
+      background: var(--ac-subtle);
+    }
+
+    .horizon-day-name {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--tx-dim);
+    }
+    .horizon-day-date {
+      font-family: var(--font-mono);
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--tx);
+    }
+
+    .horizon-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 10.5px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: var(--radius-full);
+      width: fit-content;
+    }
+
+    /* ---------- BOTÕES E AÇÕES RÁPIDAS ---------- */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: var(--ac);
+      color: #ffffff;
+      box-shadow: var(--sh-xs);
+    }
+    .btn-primary:hover {
+      background: var(--ac-hover);
+      box-shadow: var(--sh-sm);
+      transform: translateY(-1px);
+    }
+    .btn-primary:active { transform: translateY(0); }
+
+    .btn-secondary {
+      background: var(--sf);
+      border-color: var(--bd);
+      color: var(--tx);
+    }
+    .btn-secondary:hover {
+      background: var(--bg-subtle);
+      border-color: var(--tx-dim);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--tx-dim);
+      padding: 6px 10px;
+    }
+    .btn-ghost:hover {
+      background: var(--bg-subtle);
+      color: var(--tx);
+    }
+
+    .btn-danger {
+      background: var(--st-late-bg);
+      border-color: rgba(226, 68, 92, 0.3);
+      color: var(--st-late);
+    }
+    .btn-danger:hover {
+      background: var(--st-late);
+      color: #fff;
+    }
+
+    .btn-icon {
+      padding: 8px;
+      width: 34px;
+      height: 34px;
+      border-radius: var(--radius-sm);
+    }
+
+    /* Pílulas de Status Tácteis (Monday Style) */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: var(--radius-full);
+      white-space: nowrap;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .status-badge:hover {
+      transform: scale(1.05);
+      box-shadow: var(--sh-sm);
+    }
+    .status-badge:active {
+      transform: scale(0.96);
+    }
+
+    .status-dev {
+      background: var(--st-dev);
+      color: #ffffff;
+    }
+    .status-appr {
+      background: var(--st-appr);
+      color: #ffffff;
+    }
+    .status-done {
+      background: var(--st-done);
+      color: #ffffff;
+    }
+    .status-late {
+      background: var(--st-late);
+      color: #ffffff;
+    }
+
+    .pill-discipline {
+      background: var(--bg-subtle);
+      color: var(--tx-dim);
+      border: 1px solid var(--bd);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: var(--radius-sm);
+    }
+
+    /* Avatares da Equipe (ClickUp/Monday) */
+    .team-avatar {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--purple);
+      color: #fff;
+      font-size: 10.5px;
+      font-weight: 700;
+      display: inline-grid;
+      place-items: center;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+      flex: none;
+    }
+
+    /* ---------- CARDS E TABELAS MODERNAS ---------- */
+    .card {
+      background: var(--sf);
+      border: 1px solid var(--bd);
+      border-radius: var(--radius-md);
+      box-shadow: var(--sh-xs);
+      margin-bottom: 22px;
+      overflow: hidden;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--bd);
+      flex-wrap: wrap;
+    }
+
+    .card-title {
+      font-family: var(--font-display);
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .counter-pill {
+      font-size: 11px;
+      font-weight: 700;
+      background: var(--bg-subtle);
+      border: 1px solid var(--bd);
+      color: var(--tx-dim);
+      padding: 1px 8px;
+      border-radius: var(--radius-full);
+    }
+
+    /* Barra de Ações da Tabela */
+    .table-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--bd);
+      background: var(--sf);
+      flex-wrap: wrap;
+    }
+
+    .search-box {
+      position: relative;
+      flex: 1 1 280px;
+    }
+
+    .search-box input {
+      width: 100%;
+      height: 38px;
+      background: var(--bg-subtle);
+      border: 1px solid var(--bd);
+      border-radius: var(--radius-sm);
+      padding: 0 12px 0 36px;
+      font-family: inherit;
+      font-size: 13px;
+      color: var(--tx);
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .search-box input:focus {
+      background: var(--sf);
+      border-color: var(--ac);
+      box-shadow: var(--sh-glow);
+    }
+
+    .search-box svg {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 15px;
+      height: 15px;
+      color: var(--mu);
+      pointer-events: none;
+    }
+
+    .filter-pills {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      overflow-x: auto;
+      max-width: 100%;
+      padding-bottom: 2px;
+    }
+
+    .filter-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: var(--radius-full);
+      padding: 6px 14px;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--tx-dim);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.18s ease;
+      white-space: nowrap;
+    }
+
+    .filter-btn:hover {
+      background: var(--bg-subtle);
+      color: var(--tx);
+    }
+
+    .filter-btn.active {
+      background: var(--tx);
+      color: var(--sf);
+      font-weight: 700;
+      box-shadow: var(--sh-xs);
+    }
+
+    [data-theme="dark"] .filter-btn.active {
+      background: var(--tx);
+      color: var(--bg);
+    }
+
+    /* Tabela Estilo Monday.com com Linhas Card */
+    .table-scroll {
+      overflow-x: auto;
+      width: 100%;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13.5px;
+      white-space: nowrap;
+      text-align: left;
+    }
+
+    th {
+      background: var(--bg-subtle);
+      color: var(--tx-dim);
+      font-size: 11.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 11px 16px;
+      border-bottom: 1px solid var(--bd);
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
+
+    th.num, td.num {
+      text-align: right;
+      font-family: var(--font-mono);
+      font-variant-numeric: tabular-nums;
+    }
+
+    td {
+      padding: 13px 16px;
+      border-bottom: 1px solid var(--bd-light);
+      color: var(--tx);
+      transition: background-color 0.15s ease;
+    }
+
+    tr.row-clickable {
+      cursor: pointer;
+    }
+
+    tr.row-clickable:hover td {
+      background: var(--sf-hover);
+    }
+
+    .project-id {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--ac);
+      background: var(--ac-subtle);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    /* Barra de Progresso Financeiro Segmentada */
+    .progress-bar-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 120px;
+    }
+
+    .progress-track {
+      flex: 1;
+      height: 7px;
+      background: var(--bg-subtle);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--ac), var(--st-done));
+      border-radius: var(--radius-full);
+      transition: width 0.4s ease;
+    }
+
+    .progress-text {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--tx-dim);
+      min-width: 32px;
+      text-align: right;
+    }
+
+    /* Linhas Atrasadas */
+    .row-late td {
+      background: rgba(226, 68, 92, 0.04);
+    }
+    .row-late .deadline-text {
+      color: var(--st-late);
+      font-weight: 800;
+    }
+
+    /* Lista Tática em Aberto (Estilo Monday Task Board) */
+    .tactical-list {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .tactical-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--bd-light);
+      transition: background-color 0.18s ease;
+      flex-wrap: wrap;
+    }
+
+    .tactical-item:last-child {
+      border-bottom: 0;
+    }
+
+    .tactical-item:hover {
+      background: var(--sf-hover);
+    }
+
+    .tactical-main {
+      flex: 2 1 240px;
+    }
+
+    .tactical-main b {
+      display: block;
+      font-size: 14.5px;
+      color: var(--tx);
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .tactical-main span {
+      font-size: 12.5px;
+      color: var(--tx-dim);
+    }
+
+    .tactical-metric {
+      flex: 1 1 120px;
+    }
+
+    .tactical-metric small {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--mu);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .tactical-metric b {
+      font-size: 14px;
+      font-family: var(--font-mono);
+      font-variant-numeric: tabular-nums;
+      color: var(--tx);
+    }
+
+    .tactical-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 680px) {
+      .tactical-actions {
+        width: 100%;
+        justify-content: flex-start;
+      }
+    }
+
+    /* ---------- FINANCEIRO: GRÁFICOS E TELEMETRIA ---------- */
+    .chart-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-bottom: 22px;
+    }
+
+    @media (max-width: 860px) {
+      .chart-grid { grid-template-columns: 1fr; }
+    }
+
+    .chart-card {
+      background: var(--sf);
+      border: 1px solid var(--bd);
+      border-radius: var(--radius-md);
+      box-shadow: var(--sh-xs);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .chart-container {
+      position: relative;
+      height: 280px;
+      padding: 16px 20px 20px;
+      width: 100%;
+    }
+
+    /* Lista de Saldos a Receber */
+    .receivables-list {
+      max-height: 280px;
+      overflow-y: auto;
+      padding: 4px 0;
+    }
+
+    .receivable-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 20px;
+      border-bottom: 1px solid var(--bd-light);
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+
+    .receivable-item:last-child {
+      border-bottom: 0;
+    }
+
+    .receivable-item:hover {
+      background: var(--sf-hover);
+    }
+
+    /* ---------- CALENDÁRIO OPERACIONAL ---------- */
+    .calendar-layout {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 16px;
+    }
+
+    @media (max-width: 900px) {
+      .calendar-layout { grid-template-columns: 1fr; }
+    }
+
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+      padding: 16px;
+    }
+
+    .cal-day-name {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--tx-dim);
+      text-align: center;
+      padding-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .cal-day {
+      min-height: 72px;
+      border: 1px solid var(--bd);
+      border-radius: var(--radius-sm);
+      padding: 6px;
+      cursor: pointer;
+      background: var(--sf);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+    }
+
+    .cal-day:hover {
+      border-color: var(--ac);
+      background: var(--sf-hover);
+      transform: translateY(-1px);
+    }
+
+    .cal-day.other-month {
+      opacity: 0.35;
+      background: transparent;
+    }
+
+    .cal-day.is-today {
+      border-color: var(--ac);
+      background: var(--ac-subtle);
+    }
+    .cal-day.is-today .cal-num {
+      color: var(--ac);
+      font-weight: 800;
+    }
+
+    .cal-day.is-selected {
+      border-color: var(--ac);
+      box-shadow: 0 0 0 2px var(--ac);
+    }
+
+    .cal-num {
+      font-size: 12px;
+      font-weight: 700;
+      font-family: var(--font-mono);
+      line-height: 1;
+    }
+
+    .cal-chips {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      margin-top: 4px;
+    }
+
+    .cal-chip {
+      font-size: 9.5px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-height: 1.1;
+      color: #fff;
+      background: var(--ac);
+    }
+    .cal-chip.chip-apr { background: var(--st-appr); }
+    .cal-chip.chip-conc { background: var(--st-done); }
+    .cal-chip.chip-more { background: transparent; color: var(--mu); text-align: right; }
+
+    /* Painel Lateral do Calendário */
+    .day-details-panel {
+      padding: 16px 20px;
+    }
+
+    /* Grid de Gráficos e Cards Expandidos */
+    .chart-card.chart-card-wide {
+      grid-column: 1 / -1;
+    }
+
+    /* Avatares e Links da Equipe */
+    .member-clickable {
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 3px 8px;
+      border-radius: var(--radius-sm);
+      transition: all 0.15s ease;
+      color: var(--tx);
+      user-select: none;
+    }
+    .member-clickable:hover {
+      background: var(--ac-subtle);
+      color: var(--ac);
+      transform: translateY(-1px);
+    }
+    .member-clickable .team-avatar {
+      transition: transform 0.15s ease;
+    }
+    .member-clickable:hover .team-avatar {
+      transform: scale(1.1);
+    }
+
+    /* Badges do Horizonte da Semana */
+    .horizon-badge.badge-dev {
+      background: var(--st-dev-bg);
+      color: var(--st-dev);
+      border: 1px solid rgba(87, 155, 252, 0.35);
+    }
+    .horizon-badge.badge-done {
+      background: var(--st-done-bg);
+      color: var(--st-done);
+      border: 1px solid rgba(0, 200, 117, 0.35);
+    }
+    .horizon-badge.badge-free {
+      background: var(--bg-subtle);
+      color: var(--mu);
+    }
+
+    /* Chips do Calendário */
+    .cal-chip.chip-dev { background: var(--st-dev); }
+    .cal-chip.chip-late { background: var(--st-late); }
+
+    /* Caixa de Inteligência Financeira do Projeto */
+    .calc-box-modern {
+      background: var(--bg-subtle);
+      border: 1px solid var(--bd);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      grid-column: 1 / -1;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .calc-grid-inner {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    @media (max-width: 580px) {
+      .calc-grid-inner { grid-template-columns: repeat(2, 1fr); }
+    }
+    .calc-stat {
+      background: var(--sf);
+      border: 1px solid var(--bd-light);
+      border-radius: var(--radius-sm);
+      padding: 9px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .calc-stat small {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--tx-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+    .calc-stat b {
+      font-family: var(--font-mono);
+      font-size: 14.5px;
+      font-weight: 700;
+      color: var(--tx);
+    }
+    .calc-profit-strip {
+      background: var(--sf);
+      border: 1px solid var(--bd);
+      border-radius: var(--radius-sm);
+      padding: 11px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .margin-pill {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-radius: var(--radius-full);
+      background: var(--st-done-bg);
+      color: var(--st-done);
+      border: 1px solid rgba(0, 200, 117, 0.35);
+    }
+    .margin-pill.margin-warn {
+      background: var(--st-appr-bg);
+      color: var(--st-appr);
+      border-color: rgba(253, 171, 61, 0.35);
+    }
+    .margin-pill.margin-danger {
+      background: var(--st-late-bg);
+      color: var(--st-late);
+      border-color: rgba(226, 68, 92, 0.35);
+    }
+
+    dialog:not([open]) {
+      display: none !important;
+    }
+
+    /* Seletor de Período do Gráfico e Mini KPIs */
+    .chart-period-selector {
+      display: flex;
+      align-items: center;
+      background: var(--bg-subtle);
+      border-radius: var(--radius-full);
+      padding: 3px;
+      gap: 3px;
+    }
+    .period-btn {
+      background: transparent;
+      border: none;
+      padding: 5px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      font-family: var(--font-body);
+      color: var(--tx-dim);
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .period-btn:hover {
+      color: var(--tx);
+      background: var(--sf-hover);
+    }
+    .period-btn.active {
+      background: var(--sf);
+      color: var(--ac);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      font-weight: 700;
+    }
+    .chart-custom-dates {
+      padding: 10px 18px;
+      background: var(--bg-subtle);
+      border-bottom: 1px solid var(--bd-light);
+    }
+
+    .period-summary-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--bd-light);
+      background: var(--sf);
+    }
+    @media (max-width: 680px) {
+      .period-summary-strip { grid-template-columns: 1fr; }
+    }
+    .period-kpi-item {
+      background: var(--bg-subtle);
+      border: 1px solid var(--bd);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      cursor: pointer;
+      transition: all 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative;
+    }
+    .period-kpi-item:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--sh-sm);
+      border-color: var(--ac);
+      background: var(--sf);
+    }
+    .period-kpi-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--tx-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    .period-kpi-item b {
+      font-family: var(--font-mono);
+      font-size: 16.5px;
+      font-weight: 800;
+      color: var(--tx);
+    }
+    .period-kpi-item.kpi-faturamento b { color: var(--ac); }
+    .period-kpi-item.kpi-custos b { color: var(--st-late); }
+    .period-kpi-item.kpi-lucro b { color: var(--st-done); }
+    .period-kpi-item small {
+      font-size: 11px;
+      color: var(--mu);
+    }
+    .period-kpi-item:hover small {
+      color: var(--ac);
+      font-weight: 600;
+    }
+
+    /* Recebíveis e Ações de Quitação */
+    .receivable-item {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--bd-light);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      transition: background 0.15s ease;
+    }
+    .receivable-item:hover {
+      background: var(--sf-hover);
+    }
+    @media (max-width: 680px) {
+      .receivable-item { flex-direction: column; align-items: flex-start; }
+      .receivable-right { width: 100%; justify-content: space-between; margin-top: 8px; }
+    }
+    .receivable-right {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-shrink: 0;
+    }
+    .receivable-balance {
+      text-align: right;
+    }
+    .receivable-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-sm {
+      padding: 6px 12px;
+      font-size: 12px;
+      border-radius: var(--radius-sm);
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    /* Modais de Detalhamento e Contas a Receber */
+    #period-breakdown-modal, #receivables-modal {
+      width: min(980px, 96vw);
+      max-height: 90vh;
+      overflow: hidden;
+    }
+    #period-breakdown-modal[open], #receivables-modal[open] {
+      display: flex;
+      flex-direction: column;
+    }
+    .breakdown-header-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--bg-subtle);
+      border: 1px solid var(--bd);
+      display: grid;
+      place-items: center;
+      font-size: 20px;
+      flex: none;
+    }
+    .breakdown-summary-banner {
+      background: var(--bg-subtle);
+      border: 1px solid var(--bd);
+      border-radius: var(--radius-sm);
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    /* Modal Raio-X do Responsável */
+    #member-modal {
+      width: min(1040px, 96vw);
+      max-height: 90vh;
+      overflow: hidden;
+    }
+    #member-modal .table-scroll table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 840px;
+    }
+    #member-modal th, #member-modal td {
+      padding: 9px 10px;
+      font-size: 12.5px;
+    }
+    #member-modal[open] {
+      display: flex;
+      flex-direction: column;
+    }
+
+    #project-modal {
+      width: min(680px, 95vw);
+      max-height: 90vh;
+      overflow: hidden;
+    }
+    #project-modal[open] {
+      display: flex;
+      flex-direction: column;
+    }
+    #project-modal form {
+      display: flex;
+      flex-direction: column;
+      max-height: 90vh;
+      overflow: hidden;
+    }
+    #project-modal .form-grid {
+      overflow-y: auto;
+      flex: 1;
+    }
+    .member-header-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--ac), var(--purple));
+      color: #ffffff;
+      font-size: 18px;
+      font-weight: 800;
+      display: grid;
+      place-items: center;
+      box-shadow: 0 4px 12px rgba(121, 80, 242, 0.25);
+      flex: none;
+    }
+    .member-modal-body {
+      padding: 20px 24px;
+      overflow-y: auto;
+      flex: 1;
+    }
+    .member-kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    @media (max-width: 768px) {
+      .member-kpi-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 480px) {
+      .member-kpi-grid { grid-template-columns: 1fr; }
+    }
+    .member-kpi-card {
+      background: var(--bg-subtle);
+      border: 1px solid var(--bd);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .member-kpi-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--tx-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    .member-kpi-val {
+      font-family: var(--font-mono);
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--tx);
+    }
+    .member-kpi-sub {
+      font-size: 11.5px;
+      color: var(--mu);
+    }
+    .member-pipeline-wrap {
+      background: var(--bg-subtle);
+      border: 1px solid var(--bd);
+      border-radius: var(--radius-sm);
+      padding: 12px 16px;
+      margin-bottom: 20px;
+    }
+    .member-footer-summary {
+      margin-top: 20px;
+      padding: 14px 18px;
+      background: var(--bg-subtle);
+      border: 1px solid var(--bd);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    /* ---------- MODAL / DIALOG (INSPETOR TÁTICO) ---------- */
+    dialog {
+      border: 1px solid var(--bd);
+      border-radius: var(--radius-lg);
+      background: var(--sf);
+      color: var(--tx);
+      width: min(660px, 94vw);
+      padding: 0;
+      margin: auto;
+      box-shadow: var(--sh-lg);
+      outline: none;
+      animation: modalZoomIn 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes modalZoomIn {
+      from { opacity: 0; transform: scale(0.96) translateY(8px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    dialog::backdrop {
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    .dialog-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 24px;
+      border-bottom: 1px solid var(--bd);
+    }
+
+    .dialog-title {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--tx);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      padding: 20px 24px;
+    }
+
+    @media (max-width: 600px) {
+      .form-grid { grid-template-columns: 1fr; }
+    }
+
+    .form-field {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .form-field.full {
+      grid-column: 1 / -1;
+    }
+
+    .form-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--tx-dim);
+      letter-spacing: 0.02em;
+    }
+
+    .form-input, .form-select {
+      font-family: inherit;
+      font-size: 13.5px;
+      padding: 9px 12px;
+      border: 1px solid var(--bd);
+      border-radius: var(--radius-sm);
+      background: var(--bg-subtle);
+      color: var(--tx);
+      outline: none;
+      transition: all 0.2s ease;
+      width: 100%;
+    }
+
+    .form-input:focus, .form-select:focus {
+      background: var(--sf);
+      border-color: var(--ac);
+      box-shadow: var(--sh-glow);
+    }
+
+    .calc-box {
+      background: var(--bg-subtle);
+      border: 1px dashed var(--bd);
+      border-radius: var(--radius-sm);
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      grid-column: 1 / -1;
+    }
+
+    .calc-box small {
+      color: var(--tx-dim);
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .calc-box b {
+      font-family: var(--font-mono);
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--tx);
+    }
+
+    .dialog-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      padding: 14px 24px 20px;
+      border-top: 1px solid var(--bd-light);
+    }
+
+    /* ---------- TOAST SYSTEM (FEEDBACK TÁTIL) ---------- */
+    .toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      pointer-events: none;
+    }
+
+    .toast {
+      background: var(--tx);
+      color: var(--sf);
+      padding: 12px 20px;
+      border-radius: var(--radius-sm);
+      box-shadow: var(--sh-lg);
+      font-size: 13px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      pointer-events: auto;
+      transform: translateY(12px) scale(0.95);
+      opacity: 0;
+      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    [data-theme="dark"] .toast {
+      background: #ffffff;
+      color: #0c1017;
+    }
+
+    .toast.show {
+      transform: translateY(0) scale(1);
+      opacity: 1;
+    }
+
+    .empty-state {
+      padding: 40px 20px;
+      text-align: center;
+      color: var(--tx-dim);
+      font-size: 14px;
+    }
+
+    /* Responsividade */
+    @media (max-width: 680px) {
+      .nav-bar { flex-wrap: wrap; height: auto; padding: 10px 0; }
+      .nav-tabs { order: 3; width: 100%; justify-content: space-between; overflow-x: auto; }
+      .header-actions { margin-left: auto; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- CABEÇALHO TÉCNICO -->
+  <header>
+    <div class="container nav-bar">
+      <!-- Marca / Logo Oficial LR Engenharia -->
+      <div class="brand-wrap">
+        <img class="brand-logo" src="data:image/webp;base64,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" alt="LR Engenharia">
+        <div class="brand-meta">
+          <span class="brand-title">LR Engenharia</span>
+          <span class="brand-badge"><span class="pulse-dot"></span> Cockpit Operacional</span>
+        </div>
+      </div>
+
+      <!-- Navegação em Pílula Deslizante -->
+      <nav class="nav-tabs" role="tablist">
+        <button class="nav-btn active" data-tab="painel">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
+          Visão Geral
+        </button>
+        <button class="nav-btn" data-tab="proj">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg>
+          Projetos & Obras
+        </button>
+        <button class="nav-btn" data-tab="fin">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" x2="12" y1="2" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          Financeiro
+        </button>
+        <button class="nav-btn" data-tab="cal">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+          Calendário
+        </button>
+      </nav>
+
+      <!-- Ações do Header (Tema e Usuário) -->
+      <div class="header-actions">
+        <button class="btn-quick-new" onclick="openProjectModal()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Nova Obra
+        </button>
+
+        <button class="theme-toggle" id="theme-btn" title="Alternar tema claro / escuro">
+          <svg id="theme-icon-sun" style="display:none" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+          <svg id="theme-icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        </button>
+        
+        <button class="user-badge" id="user-btn" title="Alterar identificação">
+          <span class="user-avatar" id="user-initial">L</span>
+          <span id="user-name">Lucas</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- CORPO PRINCIPAL -->
+  <main class="container">
+
+    <!-- ==================== VIEW 1: PAINEL / VISÃO GERAL APROFUNDADA ==================== -->
+    <section id="view-painel" class="tab-view active">
+      <div class="view-header">
+        <div class="view-title-group">
+          <h1 id="greeting-title">Bom dia, Lucas</h1>
+          <p>Cockpit integrado: fluxo operacional, prioridades e saúde do pipeline de obras.</p>
+        </div>
+        <div class="date-indicator">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span id="current-date-str">Hoje</span>
+        </div>
+      </div>
+
+      <!-- VISÃO APROFUNDADA 1: Barra de Distribuição Operacional (Monday/ClickUp Pulse) -->
+      <div class="dashboard-pulse-strip" data-fx="subir">
+        <div class="pulse-strip-head">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--ac)" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+            <span>Saúde do Pipeline Operacional</span>
+          </div>
+          <span id="pulse-completion-rate" style="font-family:var(--font-mono); font-weight:700; color:var(--st-done);">0% Concluído</span>
+        </div>
+        
+        <div class="segmented-pipeline-bar" id="pipeline-bar-strip">
+          <!-- Segmentos preenchidos dinamicamente via JS -->
+        </div>
+
+        <div class="pipeline-legend" id="pipeline-legend-strip">
+          <!-- Legendas interativas com contadores -->
+        </div>
+      </div>
+
+      <!-- KPIs Operacionais -->
+      <div class="kpi-grid" id="painel-kpis">
+        <!-- Renderizado dinamicamente via JS -->
+      </div>
+
+      <!-- VISÃO APROFUNDADA 2: Horizonte de Entregas da Semana (Próximos 7 Dias) -->
+      <div class="card" style="margin-bottom:22px; padding:16px 20px;" data-fx="subir" data-fx-atraso="80">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+          <h3 style="font-size:14px; font-weight:800; display:flex; align-items:center; gap:8px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+            Horizonte de Entregas da Semana
+          </h3>
+          <span style="font-size:12px; color:var(--tx-dim);">Próximos 7 dias corridos</span>
+        </div>
+        <div class="weekly-horizon" id="weekly-horizon-container">
+          <!-- 7 cartões da semana -->
+        </div>
+      </div>
+
+      <!-- O PICO: Radar Tático de Entrega Crítica -->
+      <div id="spotlight-container">
+        <!-- Renderizado via JS -->
+      </div>
+
+      <!-- Tabela Tática de Obras em Aberto (Estilo Monday Task Board) -->
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            Fila de Obras em Aberto
+            <span class="counter-pill" id="badge-open-count">0</span>
+          </h2>
+          <div style="display:flex; align-items:center; gap:10px;">
+            <span style="font-size:12px; color:var(--tx-dim);">Clique no status para alternar</span>
+            <button class="btn btn-secondary" onclick="switchTab('proj')">Ver todas as obras →</button>
+          </div>
+        </div>
+        <div id="tactical-open-list" class="tactical-list">
+          <!-- Renderizado via JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== VIEW 2: CONTROLE DE PROJETOS ==================== -->
+    <section id="view-proj" class="tab-view">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg>
+            Quadro Executivo de Obras
+            <span class="counter-pill" id="badge-total-count">0</span>
+          </h2>
+          
+          <div style="display:flex; gap:8px;">
+            <button class="btn btn-secondary" onclick="exportCSV()" title="Baixar planilha CSV com todos os dados">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+              Exportar CSV
+            </button>
+            <button class="btn btn-primary" onclick="openProjectModal()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Novo Projeto
+            </button>
+          </div>
+        </div>
+
+        <!-- Barra de Ferramentas (Busca e Filtros Instantâneos) -->
+        <div class="table-toolbar">
+          <div class="search-box">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            <input type="text" id="project-search-input" placeholder="Buscar por cliente, obra, disciplina, responsável ou código ID... (ou pressione '/')">
+          </div>
+          
+          <div class="filter-pills" id="project-filter-buttons">
+            <!-- Gerado via JS com badges dinâmicos -->
+          </div>
+        </div>
+
+        <!-- Tabela -->
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Código ID</th>
+                <th>Cliente</th>
+                <th>Obra / Projeto</th>
+                <th>Disciplina</th>
+                <th>Prazo de Entrega</th>
+                <th>Status</th>
+                <th class="num">Contratado</th>
+                <th class="num">Recebido</th>
+                <th class="num">Saldo</th>
+                <th class="num" style="color:var(--purple);">Honorários</th>
+                <th class="num" style="color:var(--st-appr);">Extras</th>
+                <th class="num" style="color:var(--st-done);">Lucro LR (Margem)</th>
+                <th>Responsável (Raio-X)</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="projects-table-body">
+              <!-- Linhas geradas via JS -->
+            </tbody>
+          </table>
+          <div id="table-empty-notice" class="empty-state" style="display:none">
+            Nenhum projeto encontrado com os filtros selecionados.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== VIEW 3: COCKPIT FINANCEIRO ==================== -->
+    <section id="view-fin" class="tab-view">
+      <div class="view-header">
+        <div class="view-title-group">
+          <h1>Cockpit Financeiro & Lucratividade</h1>
+          <p>Métricas consolidadas de faturamento, custos de equipe, repasses e margem líquida da LR Engenharia.</p>
+        </div>
+      </div>
+
+      <!-- 6 KPIs Financeiros Executivos -->
+      <div class="kpi-grid" id="financial-kpis">
+        <!-- Preenchido via JS -->
+      </div>
+
+      <!-- Grade de Gráficos de Inteligência Financeira -->
+      <div class="chart-grid">
+        <!-- Gráfico 1: Desempenho Integrado Mensal (Receita vs. Custos vs. Lucro) com Seletor de Período e Drill-down -->
+        <div class="chart-card chart-card-wide">
+          <div class="card-header" style="flex-wrap:wrap; gap:12px;">
+            <div>
+              <h3 class="card-title" style="display:flex; align-items:center; gap:8px;">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--ac)" stroke-width="2"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+                Desempenho Financeiro Mensal (Faturamento vs. Custos vs. Lucro Líquido)
+              </h3>
+              <span style="font-size:12px; color:var(--tx-dim);">Barras: Contratado & Custos · Linha verde: Lucro Líquido Real / Projetado</span>
+            </div>
+
+            <!-- Seletor de Período: 30D, 3M, 6M, 1A, Todo o Período, Personalizado -->
+            <div class="chart-period-selector" id="chart-period-selector">
+              <button class="period-btn" data-period="30D" onclick="setChartPeriod('30D')">30D</button>
+              <button class="period-btn" data-period="3M" onclick="setChartPeriod('3M')">3 Meses</button>
+              <button class="period-btn" data-period="6M" onclick="setChartPeriod('6M')">6 Meses</button>
+              <button class="period-btn" data-period="1A" onclick="setChartPeriod('1A')">1 Ano</button>
+              <button class="period-btn active" data-period="ALL" onclick="setChartPeriod('ALL')">Todo o Período</button>
+              <button class="period-btn" data-period="CUSTOM" onclick="setChartPeriod('CUSTOM')">Personalizado</button>
+            </div>
+          </div>
+
+          <!-- Filtro de Datas Personalizado -->
+          <div id="chart-custom-dates" class="chart-custom-dates" style="display:none;">
+            <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+              <span style="font-size:12px; font-weight:700; color:var(--tx-dim);">Intervalo Personalizado:</span>
+              <div style="display:flex; align-items:center; gap:6px;">
+                <label style="font-size:11.5px; color:var(--tx-dim);">De:</label>
+                <input type="date" id="chart-date-start" class="form-input" style="width:auto; padding:5px 8px; font-size:12px;">
+              </div>
+              <div style="display:flex; align-items:center; gap:6px;">
+                <label style="font-size:11.5px; color:var(--tx-dim);">Até:</label>
+                <input type="date" id="chart-date-end" class="form-input" style="width:auto; padding:5px 8px; font-size:12px;">
+              </div>
+              <button class="btn btn-secondary btn-sm" onclick="applyCustomChartDates()">Filtrar Período</button>
+            </div>
+          </div>
+
+          <!-- Mini KPIs do Período Clicáveis (Drill-Down Interativo) -->
+          <div class="period-summary-strip" id="period-summary-strip">
+            <div class="period-kpi-item kpi-faturamento" onclick="openPeriodBreakdown('faturamento')" title="Clique para ver detalhamento de todos os faturamentos ordenados do maior para o menor">
+              <div class="period-kpi-head">
+                <span>Faturamento no Período</span>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+              </div>
+              <b id="period-faturamento-val">R$ 0,00</b>
+              <small>👆 Clique p/ dissecar faturamentos</small>
+            </div>
+
+            <div class="period-kpi-item kpi-custos" onclick="openPeriodBreakdown('custos')" title="Clique para ver detalhamento de todos os custos ordenados do maior para o menor">
+              <div class="period-kpi-head">
+                <span>Custos no Período</span>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+              </div>
+              <b id="period-custos-val">R$ 0,00</b>
+              <small>👆 Clique p/ dissecar custos por obra</small>
+            </div>
+
+            <div class="period-kpi-item kpi-lucro" onclick="openPeriodBreakdown('lucro')" title="Clique para ver detalhamento de todos os lucros ordenados do maior para o menor">
+              <div class="period-kpi-head">
+                <span>Lucro Líquido no Período</span>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+              </div>
+              <b id="period-lucro-val">R$ 0,00</b>
+              <small id="period-margem-label">0% margem · 👆 Detalhar</small>
+            </div>
+          </div>
+
+          <div class="chart-container" style="height:320px; padding:0 16px 16px;">
+            <canvas id="chart-monthly"></canvas>
+          </div>
+        </div>
+
+        <!-- Gráfico 2: Composição Financeira & Destinação do Faturamento -->
+        <div class="chart-card">
+          <div class="card-header">
+            <div>
+              <h3 class="card-title" style="display:flex; align-items:center; gap:8px;">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--st-done)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 9.17 4.24-4.24"/></svg>
+                Destinação do Faturamento (Lucro vs. Custos)
+              </h3>
+              <span style="font-size:12px; color:var(--tx-dim);">Divisão percentual de cada R$ faturado</span>
+            </div>
+          </div>
+          <div class="chart-container" style="height:300px;">
+            <canvas id="chart-composition"></canvas>
+          </div>
+        </div>
+
+        <!-- Gráfico 3: Faturamento vs. Repasses por Responsável -->
+        <div class="chart-card">
+          <div class="card-header">
+            <div>
+              <h3 class="card-title" style="display:flex; align-items:center; gap:8px;">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                Faturamento vs. Honorários por Responsável
+              </h3>
+              <span style="font-size:12px; color:var(--tx-dim);">Contratado vs. Honorários a pagar</span>
+            </div>
+          </div>
+          <div class="chart-container" style="height:300px;">
+            <canvas id="chart-engineers"></canvas>
+          </div>
+        </div>
+
+        <!-- Gráfico 4: Faturamento por Disciplina / Especialidade -->
+        <div class="chart-card">
+          <div class="card-header">
+            <div>
+              <h3 class="card-title" style="display:flex; align-items:center; gap:8px;">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+                Faturamento por Disciplina / Especialidade
+              </h3>
+              <span style="font-size:12px; color:var(--tx-dim);">Distribuição do volume contratado por área</span>
+            </div>
+          </div>
+          <div class="chart-container" style="height:300px;">
+            <canvas id="chart-disciplines"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- NOVA SEÇÃO: Painel de Repasses e Honorários da Equipe -->
+      <div class="card" style="margin-top:24px;">
+        <div class="card-header">
+          <div>
+            <h2 class="card-title" style="display:flex; align-items:center; gap:8px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              Painel de Repasses e Honorários da Equipe
+            </h2>
+            <span style="font-size:12px; color:var(--tx-dim);">Clique em qualquer colaborador para abrir o Raio-X detalhado de projetos e repasses</span>
+          </div>
+        </div>
+        <div class="table-scroll">
+          <table id="team-payouts-table">
+            <thead>
+              <tr>
+                <th>Colaborador / Parceiro</th>
+                <th>Obras Atribuídas</th>
+                <th class="num">Faturamento Gerado</th>
+                <th class="num" style="color:var(--purple);">Total Honorários</th>
+                <th class="num" style="color:var(--st-done);">Honorários Concluídos</th>
+                <th class="num" style="color:var(--st-appr);">Honorários em Aberto</th>
+                <th class="num" style="color:var(--st-done);">Lucro Retido LR</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="team-payouts-tbody">
+              <!-- Gerado via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SEÇÃO: Saldos Pendentes a Receber (Contas a Receber de Clientes) -->
+      <div class="card" style="margin-top:24px;">
+        <div class="card-header">
+          <div>
+            <h2 class="card-title" style="display:flex; align-items:center; gap:8px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--st-late)" stroke-width="2"><line x1="12" x2="12" y1="2" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              Saldos Pendentes a Receber (Contas a Receber)
+            </h2>
+            <span style="font-size:12px; color:var(--tx-dim);">Obras com valores pendentes de quitação por clientes</span>
+          </div>
+        </div>
+        <div class="receivables-list" id="receivables-container">
+          <!-- Lista com saldos pendentes -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== VIEW 4: CALENDÁRIO OPERACIONAL ==================== -->
+    <section id="view-cal" class="tab-view">
+      <div class="calendar-layout">
+        <!-- Grade do Mês -->
+        <div class="card">
+          <div class="card-header">
+            <div style="display:flex; align-items:center; gap:10px;">
+              <button class="btn btn-secondary btn-icon" id="cal-prev-btn" title="Mês anterior">‹</button>
+              <h2 class="card-title" id="cal-month-title" style="min-width: 170px; text-transform: capitalize;">Novembro 2026</h2>
+              <button class="btn btn-secondary btn-icon" id="cal-next-btn" title="Próximo mês">›</button>
+            </div>
+            <button class="btn btn-ghost" id="cal-today-btn">Mês Atual</button>
+          </div>
+          <div class="calendar-grid" id="calendar-grid-container">
+            <!-- Dias do calendário gerados via JS -->
+          </div>
+        </div>
+
+        <!-- Painel Lateral de Entregas da Data Selecionada -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title" id="cal-selected-day-label" style="text-transform: capitalize;">Entregas do Dia</h3>
+          </div>
+          <div class="day-details-panel" id="cal-day-deliveries-list">
+            <!-- Detalhes do dia selecionado -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==================== MODAL: INSPETOR TÁTICO & EDIÇÃO ==================== -->
+  <dialog id="project-modal">
+    <form id="project-form" method="dialog">
+      <div class="dialog-header">
+        <h2 class="dialog-title" id="modal-project-title">Novo Projeto</h2>
+        <button type="button" class="btn btn-ghost btn-icon" onclick="closeProjectModal()" title="Fechar">✕</button>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-field">
+          <label class="form-label">Cliente *</label>
+          <input type="text" class="form-input" name="cli" required placeholder="Ex.: Dona Maria, Construtora X">
+        </div>
+        
+        <div class="form-field">
+          <label class="form-label">Obra / Nome do Projeto *</label>
+          <input type="text" class="form-input" name="obra" required placeholder="Ex.: Casa de Alvenaria, Galpão A">
+        </div>
+
+        <div class="form-field">
+          <label class="form-label">Disciplina / Especialidade</label>
+          <input type="text" class="form-input" name="area" list="discipline-datalist" placeholder="Selecione ou digite...">
+        </div>
+
+        <div class="form-field">
+          <label class="form-label">Tipo de Serviço</label>
+          <input type="text" class="form-input" name="tipo" value="Projeto novo">
+        </div>
+
+        <div class="form-field">
+          <label class="form-label">Data de Contratação</label>
+          <input type="date" class="form-input" name="ini">
+        </div>
+
+        <div class="form-field">
+          <label class="form-label">Prazo de Entrega *</label>
+          <input type="date" class="form-input" name="prazo" required>
+        </div>
+
+        <div class="form-field">
+          <label class="form-label">Status Operacional *</label>
+          <select class="form-select" name="st">
+            <option value="Em desenvolvimento">Em desenvolvimento</option>
+            <option value="Aguardando aprovação">Aguardando aprovação</option>
+            <option value="Concluído">Concluído</option>
+          </select>
+        </div>
+
+        <div class="form-field">
+          <label class="form-label">Responsável Técnico</label>
+          <input type="text" class="form-input" name="resp" placeholder="Ex.: Lucas, Ricardo, Dayane, Fernando">
+        </div>
+
+        <div class="form-field">
+          <label class="form-label">Valor Contratado (R$)</label>
+          <input type="number" step="0.01" min="0" class="form-input" name="valor" id="input-valor" value="0.00">
+        </div>
+
+        <div class="form-field">
+          <label class="form-label">Valor Já Recebido (R$)</label>
+          <input type="number" step="0.01" min="0" class="form-input" name="rec" id="input-rec" value="0.00">
+        </div>
+
+        <div class="form-field">
+          <label class="form-label" style="color:var(--purple); display:flex; justify-content:space-between; align-items:center;">
+            <span>A Pagar ao Responsável (R$)</span>
+            <span id="quick-member-link" style="font-size:11px; cursor:pointer; text-decoration:underline;" onclick="openCurrentProjectMember()">Ver Raio-X</span>
+          </label>
+          <input type="number" step="0.01" min="0" class="form-input" name="custoResp" id="input-custoresp" value="0.00" placeholder="Ex.: 350.00">
+        </div>
+
+        <div class="form-field">
+          <label class="form-label">Custos Extras da Obra (ART, taxas, etc.) (R$)</label>
+          <input type="number" step="0.01" min="0" class="form-input" name="custosExtras" id="input-custosextras" value="0.00" placeholder="Ex.: 98.00">
+        </div>
+
+        <div class="form-field full">
+          <label class="form-label">Detalhamento dos Custos / Notas Financeiras</label>
+          <input type="text" class="form-input" name="custosNotas" placeholder="Ex.: ART de projeto R$ 98,00 + Plotagem R$ 45,00">
+        </div>
+
+        <!-- Caixa de Inteligência Financeira e Rentabilidade -->
+        <div class="calc-box-modern">
+          <div class="calc-grid-inner">
+            <div class="calc-stat">
+              <small>Contratado</small>
+              <b id="calc-valor-display">R$ 0,00</b>
+            </div>
+            <div class="calc-stat">
+              <small>Já Recebido</small>
+              <b id="calc-rec-display" style="color:var(--st-done);">R$ 0,00</b>
+            </div>
+            <div class="calc-stat">
+              <small>Saldo a Receber</small>
+              <b id="calc-saldo-display" style="color:var(--st-late);">R$ 0,00</b>
+            </div>
+            <div class="calc-stat">
+              <small>Honorários Resp.</small>
+              <b id="calc-custoresp-display" style="color:var(--purple);">R$ 0,00</b>
+            </div>
+            <div class="calc-stat">
+              <small>Custos Extras</small>
+              <b id="calc-custosextras-display" style="color:var(--st-appr);">R$ 0,00</b>
+            </div>
+            <div class="calc-stat">
+              <small>Custo Total</small>
+              <b id="calc-custototal-display">R$ 0,00</b>
+            </div>
+          </div>
+          <div class="calc-profit-strip">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span style="font-size:12px; font-weight:700; color:var(--tx-dim);">LUCRO LÍQUIDO PROJETADO:</span>
+              <b id="calc-lucro-display" style="font-size:16px; font-family:var(--font-mono); color:var(--st-done);">R$ 0,00</b>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span style="font-size:12px; font-weight:700; color:var(--tx-dim);">MARGEM:</span>
+              <span class="margin-pill" id="calc-margem-pill">0%</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-field full">
+          <label class="form-label">Observações e Anotações</label>
+          <input type="text" class="form-input" name="obs" placeholder="Ex.: Protocolado na prefeitura, ART emitida...">
+        </div>
+      </div>
+
+      <datalist id="discipline-datalist"></datalist>
+
+      <div class="dialog-actions">
+        <button type="button" class="btn btn-danger" id="modal-delete-btn" style="margin-right:auto; display:none;">Excluir Obra</button>
+        <button type="button" class="btn btn-secondary" onclick="closeProjectModal()">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+      </div>
+    </form>
+  </dialog>
+  <!-- ==================== MODAL: RAIO-X DO RESPONSÁVEL (CLICKUP MEMBER PROFILE) ==================== -->
+  <dialog id="member-modal">
+    <div class="dialog-header">
+      <div style="display:flex; align-items:center; gap:14px;">
+        <div class="member-header-avatar" id="member-modal-avatar">LR</div>
+        <div>
+          <h2 class="dialog-title" id="member-modal-name" style="margin-bottom:2px;">Nome do Responsável</h2>
+          <span id="member-modal-subtitle" style="font-size:12.5px; color:var(--tx-dim);">Especialidade / Responsável Técnico</span>
+        </div>
+      </div>
+      <button type="button" class="btn btn-ghost btn-icon" onclick="closeMemberModal()" title="Fechar">✕</button>
+    </div>
+
+    <div class="member-modal-body">
+      <!-- KPIs do Responsável -->
+      <div class="member-kpi-grid" id="member-modal-kpis">
+        <!-- Preenchido via JS -->
+      </div>
+
+      <!-- Barra de Distribuição de Obras da Pessoa -->
+      <div class="member-pipeline-wrap">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <small style="font-size:11.5px; font-weight:700; color:var(--tx-dim); text-transform:uppercase; letter-spacing:0.04em;">Distribuição Operacional</small>
+          <span id="member-completion-rate" style="font-size:12px; font-weight:700; font-family:var(--font-mono); color:var(--st-done);">0% Concluído</span>
+        </div>
+        <div class="segmented-pipeline-bar" id="member-pipeline-bar" style="height:8px;"></div>
+      </div>
+
+      <!-- Tabela de Obras da Pessoa -->
+      <div style="margin-top:10px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+          <h3 style="font-size:14px; font-weight:800; display:flex; align-items:center; gap:8px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg>
+            Projetos Atribuídos a este Responsável
+            <span class="counter-pill" id="member-projects-count">0</span>
+          </h3>
+          <span style="font-size:11.5px; color:var(--tx-dim);">Clique no status para alternar ou em editar para ajustar valores</span>
+        </div>
+
+        <div class="table-scroll" style="max-height:320px; overflow-y:auto; border:1px solid var(--bd); border-radius:var(--radius-sm);">
+          <table style="font-size:13px;">
+            <thead>
+              <tr>
+                <th>Código ID</th>
+                <th>Cliente & Obra</th>
+                <th>Disciplina</th>
+                <th>Prazo</th>
+                <th>Status</th>
+                <th class="num">Contratado</th>
+                <th class="num" style="color:var(--purple);">Honorários</th>
+                <th class="num" style="color:var(--st-done);">Lucro LR</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="member-projects-tbody">
+              <!-- Gerado via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Rodapé com Resumo de Honorários Liberados vs Futuros -->
+      <div class="member-footer-summary" id="member-footer-summary">
+        <!-- Gerado via JS -->
+      </div>
+    </div>
+
+    <div class="dialog-actions">
+      <button type="button" class="btn btn-secondary" onclick="closeMemberModal()">Fechar</button>
+    </div>
+  </dialog>
+  <!-- ==================== MODAL: DETALHAMENTO DE PERÍODO (DRILL-DOWN) ==================== -->
+  <dialog id="period-breakdown-modal">
+    <div class="dialog-header">
+      <div style="display:flex; align-items:center; gap:12px;">
+        <div class="breakdown-header-icon" id="breakdown-modal-icon">📊</div>
+        <div>
+          <h2 class="dialog-title" id="breakdown-modal-title">Detalhamento Financeiro do Período</h2>
+          <span id="breakdown-modal-subtitle" style="font-size:12.5px; color:var(--tx-dim);">Ordenado do maior para o menor</span>
+        </div>
+      </div>
+      <button type="button" class="btn btn-ghost btn-icon" onclick="closePeriodBreakdown()" title="Fechar">✕</button>
+    </div>
+
+    <div class="member-modal-body">
+      <!-- Banner com Resumo do Período -->
+      <div class="breakdown-summary-banner" id="breakdown-summary-banner">
+        <!-- Preenchido via JS -->
+      </div>
+
+      <!-- Tabela Ordenada do Maior para o Menor -->
+      <div class="table-scroll" style="max-height:420px; overflow-y:auto; border:1px solid var(--bd); border-radius:var(--radius-sm); margin-top:14px;">
+        <table id="breakdown-table" style="font-size:13px; width:100%;">
+          <thead id="breakdown-thead">
+            <!-- Headers dinâmicos -->
+          </thead>
+          <tbody id="breakdown-tbody">
+            <!-- Linhas ordenadas decrescentes -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="dialog-actions">
+      <button type="button" class="btn btn-secondary" onclick="closePeriodBreakdown()">Fechar</button>
+    </div>
+  </dialog>
+
+  <!-- ==================== MODAL: CONTAS A RECEBER (SALDOS PENDENTES) ==================== -->
+  <dialog id="receivables-modal">
+    <div class="dialog-header">
+      <div style="display:flex; align-items:center; gap:12px;">
+        <div style="width:44px; height:44px; border-radius:50%; background:var(--st-late-bg); color:var(--st-late); font-size:20px; display:grid; place-items:center; font-weight:800; flex:none;">
+          💰
+        </div>
+        <div>
+          <h2 class="dialog-title">Contas a Receber · Saldos Pendentes</h2>
+          <span id="receivables-modal-subtitle" style="font-size:12.5px; color:var(--tx-dim);">Todos os projetos com saldo em aberto para cobrança</span>
+        </div>
+      </div>
+      <button type="button" class="btn btn-ghost btn-icon" onclick="closeReceivablesModal()" title="Fechar">✕</button>
+    </div>
+
+    <div class="member-modal-body">
+      <!-- Barra com Total e Busca Rápida -->
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:16px; flex-wrap:wrap;">
+        <div style="background:var(--bg-subtle); padding:10px 16px; border-radius:var(--radius-sm); border:1px solid var(--bd);">
+          <small style="font-size:11px; text-transform:uppercase; font-weight:700; color:var(--tx-dim); display:block;">Total Pendente a Receber:</small>
+          <b id="receivables-modal-total" style="font-family:var(--font-mono); font-size:19px; color:var(--st-late);">R$ 0,00</b>
+        </div>
+        <div class="search-box" style="max-width:320px; width:100%;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <input type="text" id="receivables-search-input" placeholder="Filtrar clientes devedores...">
+        </div>
+      </div>
+
+      <!-- Lista interativa de recebíveis com botões 'Marcar como Recebido' e 'Ver Mais' -->
+      <div class="receivables-list" id="modal-receivables-list" style="max-height:440px; overflow-y:auto; border:1px solid var(--bd); border-radius:var(--radius-sm);">
+        <!-- Preenchido via JS -->
+      </div>
+    </div>
+
+    <div class="dialog-actions">
+      <button type="button" class="btn btn-secondary" onclick="closeReceivablesModal()">Fechar</button>
+      <button type="button" class="btn btn-primary" onclick="closeReceivablesModal(); switchTab('fin');">Ir para Cockpit Financeiro →</button>
+    </div>
+  </dialog>
+
+  <!-- Container de Toasts de Notificação -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Motor de Efeitos Sites Incríveis -->
+  <script src="sites-incriveis.js" defer></script>
+
+  <!-- Script Lógico do Cockpit LR Engenharia -->
+  <script>
+    /* ===================================================================
+       LR ENGENHARIA — COCKPIT DE COMANDO TÁTICO
+       Edição ClickUp / Monday.com (Microinterações Fluidas & Telemetria)
+       =================================================================== */
+
+    // Utilitários de Data e Moeda
+    const isoDate = d => d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+    const TODAY = isoDate(new Date());
+    const parseDate = s => new Date(s + "T12:00:00");
+    const diffDays = (prazoStr, baseStr) => Math.round((parseDate(prazoStr) - parseDate(baseStr)) / (1000 * 60 * 60 * 24));
+    const formatDate = s => s ? s.split("-").reverse().join("/") : "—";
+    const toBRL = v => (+v || 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+    const escapeHTML = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+    }[c]));
+
+    // Constantes Operacionais Monday/ClickUp
+    const STATUS_DONE = "Concluído";
+    const STATUS_DEV = "Em desenvolvimento";
+    const STATUS_APPR = "Aguardando aprovação";
+
+    const getStatusClass = st => st === STATUS_DONE ? "done" : st === STATUS_APPR ? "appr" : "dev";
+    const isLate = p => p.st !== STATUS_DONE && p.prazo < TODAY;
+    const getBalance = p => Math.max(0, (+p.valor || 0) - (+p.rec || 0));
+    const getPercentage = p => (+p.valor > 0) ? Math.min(100, Math.round(((+p.rec || 0) / (+p.valor)) * 100)) : 0;
+
+    // Métricas Financeiras Avançadas (Custos, Repasses e Lucro Líquido)
+    const getCustoTotal = p => (+p.custoResp || 0) + (+p.custosExtras || 0);
+    const getLucro = p => (+p.valor || 0) - getCustoTotal(p);
+    const getMargem = p => (+p.valor > 0) ? Math.round((getLucro(p) / (+p.valor)) * 100) : 0;
+
+    // Iniciais para Avatares ClickUp
+    const getInitials = name => {
+      if (!name || name === "—") return "LR";
+      const parts = name.trim().split(" ");
+      if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+      return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+    };
+
+    // Base de Dados Original (23 Projetos Reais Preservados com Custos Realistas)
+    const A1 = "ARQ-SAN - Regularização", HS = "Hidrossanitário", EL = "Elétrico", RJ = "Ricardo João de Jesus", FA = "Fernando Aliança", DS = "Dayane de Souza", RF = "Reinaldo Favero", PE = "Projeto entregue";
+    const SEED_DATA = [
+      ["Dona Maria","Casa de madeira",A1,"17/11/2025","17/11/2025",STATUS_DONE,1000,1000,RJ,PE,350,80,"ART R$ 80"],
+      ["Gregor","Casa de madeira",A1,"28/11/2025","28/11/2025",STATUS_DONE,1500,1500,RJ,PE,500,100,"ART + Taxas"],
+      ["Ricardo","Casas geminadas",A1,"25/11/2025","25/11/2025",STATUS_DONE,0,0,FA,PE,0,0,"Parceria direta"],
+      ["Tio Renato","Obra Sarah",A1,"08/12/2025","08/12/2025",STATUS_DONE,800,800,FA,PE,280,60,"Plotagem"],
+      ["Germano","Chalé",A1,"10/02/2026","10/02/2026",STATUS_DONE,600,600,RJ,PE,200,50,"ART"],
+      ["Luis carlos","Casa",A1,"26/01/2026","26/01/2026",STATUS_DONE,700,700,RJ,PE,250,50,"Taxas municipais"],
+      ["Adair","Galpão",A1,"17/03/2026","17/03/2026",STATUS_DONE,700,700,DS,PE,250,50,"ART"],
+      ["Adair","Galpão","PPCI","17/03/2026","17/03/2026",STATUS_DONE,500,500,RJ,PE,180,50,"Taxa bombeiros"],
+      ["João","Casa de alvenaria",A1,"06/04/2026","06/04/2026",STATUS_DONE,1300,1300,RJ,PE,450,90,"ART CREA"],
+      ["Pedro","Casa de madeira",A1,"14/04/2026","14/04/2026",STATUS_DONE,1000,1000,RJ,PE,350,80,"ART + cópias"],
+      ["Valtanir","Casa de alvenaria",A1,"12/05/2026","12/05/2026",STATUS_DONE,1300,1300,RJ,PE,450,90,"ART"],
+      ["Erivelton","Kitnet",A1,"08/06/2026","08/06/2026",STATUS_DEV,4000,1000,DS,"Projeto aguardando",1400,250,"Levantamento topográfico"],
+      ["Silvana","3 casas",A1,"02/07/2026","02/07/2026",STATUS_DONE,3500,3500,DS,PE,1200,200,"ART + Plotagens"],
+      ["João Carlos","Casa de madeira","ARQ-HIS-ELE","05/10/2026","05/10/2026",STATUS_APPR,3000,0,RJ,"Projeto aguardando aprovação",1050,180,"Taxa prefeitura"],
+      ["Externo","Fachada de obra","Arquitetônico","07/04/2026","07/04/2026",STATUS_DONE,350,350,"",PE,0,30,"Plotagem fachada"],
+      ["Vinicius","Documentação",HS,"10/05/2026","10/05/2026",STATUS_DONE,300,300,"",PE,0,30,"Emissão de certidões"],
+      ["Bruna","Residencia",A1,"10/06/2026","10/06/2026",STATUS_DONE,450,450,"",PE,0,40,"Plotagem"],
+      ["Reinaldo","Residencia sons do mar",HS,"21/09/2026","21/09/2026",STATUS_DONE,1000,1000,RF,PE,350,80,"ART projeto hidro"],
+      ["Casiano","Casa de comando",EL,"11/09/2026","11/09/2026",STATUS_DONE,400,400,"",PE,0,40,"Material e taxas"],
+      ["Reinaldo","ELE rodrigo",EL,"21/09/2026","21/09/2026",STATUS_DONE,1000,1000,RF,PE,350,80,"ART projeto elétrico"],
+      ["Reinaldo","ETE Paulo Lopes",HS,"01/10/2026","01/10/2026",STATUS_DONE,500,0,RF,PE,180,40,"ART"],
+      ["Vinicius","ELE campeche",EL,"20/10/2026","20/10/2026",STATUS_DONE,500,0,"","",0,40,"Taxas concessionária"],
+      ["Triches","Edificio Edux",HS,"29/10/2026","29/12/2026",STATUS_DEV,3000,0,"Triches engenharia","",1100,200,"ART + compatibilização BIM"]
+    ];
+
+    const convertBRDate = s => s.split("/").reverse().join("-");
+
+    // Normalizador de Custos para compatibilidade com dados salvos anteriormente
+    function ensureCostFields(p) {
+      if (p.custoResp == null || isNaN(p.custoResp)) {
+        if (p.resp && p.resp.trim() && p.resp.trim() !== "Não atribuído" && p.resp.trim() !== "—") {
+          p.custoResp = Math.round((+p.valor || 0) * 0.35);
+        } else {
+          p.custoResp = 0;
+        }
+      }
+      if (p.custosExtras == null || isNaN(p.custosExtras)) {
+        p.custosExtras = (+p.valor > 0) ? Math.round((+p.valor || 0) * 0.08) : 0;
+      }
+      if (p.custosNotas == null) {
+        p.custosNotas = "";
+      }
+    }
+
+    // Estado da Aplicação (Compatível com 'lr-v1' no LocalStorage)
+    let AppState = {
+      name: "Lucas",
+      theme: "light",
+      p: null
+    };
+
+    try {
+      const stored = localStorage.getItem("lr-v1");
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        AppState = Object.assign(AppState, parsed);
+      }
+    } catch (e) {
+      console.warn("Aviso ao ler localStorage:", e);
+    }
+
+    if (!AppState.p || !AppState.p.length) {
+      AppState.p = SEED_DATA.map((r, idx) => ({
+        id: "PRJ-" + String(idx + 5).padStart(4, "0"),
+        cli: r[0],
+        obra: r[1],
+        area: r[2],
+        tipo: "Projeto novo",
+        ini: convertBRDate(r[3]),
+        prazo: convertBRDate(r[4]),
+        st: r[5],
+        valor: +r[6] || 0,
+        rec: +r[7] || 0,
+        resp: r[8] || "",
+        obs: r[9] || "",
+        custoResp: r[10] != null ? +r[10] : 0,
+        custosExtras: r[11] != null ? +r[11] : 0,
+        custosNotas: r[12] || ""
+      }));
+    } else {
+      AppState.p.forEach(ensureCostFields);
+    }
+
+    const saveState = () => {
+      try {
+        localStorage.setItem("lr-v1", JSON.stringify(AppState));
+      } catch (e) {
+        console.error("Erro ao salvar:", e);
+      }
+    };
+
+    // Disparador de Confetes ClickUp/Monday
+    function triggerCelebration() {
+      if (typeof confetti === "function") {
+        confetti({
+          particleCount: 50,
+          spread: 60,
+          origin: { y: 0.7 },
+          colors: ['#00c875', '#0073ea', '#7950f2', '#fdab3d']
+        });
+      }
+    }
+
+    // Sistema de Notificação Toast Fluido
+    function showToast(msg, icon = "✓") {
+      const container = document.getElementById("toast-container");
+      const toast = document.createElement("div");
+      toast.className = "toast";
+      toast.innerHTML = `<span style="color:var(--st-done); font-weight:800; font-size:15px;">${icon}</span> <span>${escapeHTML(msg)}</span>`;
+      container.appendChild(toast);
+      
+      requestAnimationFrame(() => toast.classList.add("show"));
+      setTimeout(() => {
+        toast.classList.remove("show");
+        setTimeout(() => toast.remove(), 250);
+      }, 3200);
+    }
+
+    // Alternador de Abas com Suporte a Teclado e Histórico
+    function switchTab(tabId) {
+      document.querySelectorAll(".nav-btn").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.tab === tabId);
+      });
+      document.querySelectorAll(".tab-view").forEach(view => {
+        view.classList.toggle("active", view.id === "view-" + tabId);
+      });
+      if (tabId === "fin") {
+        renderFinancialView();
+      } else if (tabId === "cal") {
+        renderCalendar();
+      }
+    }
+
+    document.querySelectorAll(".nav-btn").forEach(btn => {
+      btn.addEventListener("click", () => switchTab(btn.dataset.tab));
+    });
+
+    // Alternador de Tema Claro / Escuro
+    function applyTheme(theme) {
+      document.documentElement.setAttribute("data-theme", theme);
+      AppState.theme = theme;
+      saveState();
+      
+      const sun = document.getElementById("theme-icon-sun");
+      const moon = document.getElementById("theme-icon-moon");
+      if (theme === "dark") {
+        sun.style.display = "block";
+        moon.style.display = "none";
+      } else {
+        sun.style.display = "none";
+        moon.style.display = "block";
+      }
+      if (document.getElementById("view-fin").classList.contains("active")) {
+        renderFinancialView();
+      }
+    }
+
+    document.getElementById("theme-btn").addEventListener("click", () => {
+      const nextTheme = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+      applyTheme(nextTheme);
+      showToast(`Tema ${nextTheme === "dark" ? "Escuro" : "Claro"} ativado.`);
+    });
+
+    // Identificação do Usuário
+    function updateUserInfo() {
+      const name = AppState.name || "Lucas";
+      document.getElementById("user-name").textContent = name;
+      document.getElementById("user-initial").textContent = name[0].toUpperCase();
+      
+      const h = new Date().getHours();
+      const period = h < 12 ? "Bom dia" : h < 18 ? "Boa tarde" : "Boa noite";
+      document.getElementById("greeting-title").textContent = `${period}, ${name}`;
+      
+      const todayDateObj = new Date();
+      const dateFormatted = todayDateObj.toLocaleDateString("pt-BR", {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+      });
+      document.getElementById("current-date-str").textContent = dateFormatted.charAt(0).toUpperCase() + dateFormatted.slice(1);
+    }
+
+    document.getElementById("user-btn").addEventListener("click", () => {
+      const newName = prompt("Insira seu nome de identificação:", AppState.name);
+      if (newName && newName.trim()) {
+        AppState.name = newName.trim();
+        saveState();
+        updateUserInfo();
+        showToast(`Identificação atualizada para ${AppState.name}`);
+      }
+    });
+
+    // Alternador Rápido de Status (ClickUp / Monday Cycle)
+    function cycleStatus(id, event) {
+      if (event) event.stopPropagation();
+      const p = AppState.p.find(x => x.id === id);
+      if (!p) return;
+
+      const order = [STATUS_DEV, STATUS_APPR, STATUS_DONE];
+      const curIdx = order.indexOf(p.st);
+      const nextSt = order[(curIdx + 1) % order.length];
+      
+      p.st = nextSt;
+      saveState();
+      refreshAll();
+
+      // Se o modal do responsável estiver aberto, atualiza-o em tempo real
+      const memberModal = document.getElementById("member-modal");
+      if (memberModal && memberModal.open && activeMemberName) {
+        renderMemberModalData(activeMemberName);
+      }
+      
+      if (nextSt === STATUS_DONE) {
+        triggerCelebration();
+        showToast(`Obra ${id} marcada como CONCLUÍDA!`, "🎉");
+      } else {
+        showToast(`Obra ${id}: status alterado para "${nextSt}"`);
+      }
+    }
+
+    // Cálculo do Tempo Relativo do Prazo
+    function getDeadlineBadge(p) {
+      if (p.st === STATUS_DONE) {
+        return `<span class="status-badge status-done">✓ Entregue</span>`;
+      }
+      const days = diffDays(p.prazo, TODAY);
+      if (days < 0) {
+        return `<span class="status-badge status-late">${-days}d atrasado</span>`;
+      }
+      if (days === 0) {
+        return `<span class="status-badge status-late" style="background:var(--st-appr);">Vence hoje</span>`;
+      }
+      if (days === 1) {
+        return `<span class="status-badge status-appr">Amanhã</span>`;
+      }
+      return `<span class="status-badge status-dev">em ${days} dias</span>`;
+    }
+
+    // ----------------------------------------------------
+    // COMPILADOR DE EQUIPE / PARCEIROS (RAIO-X DE DADOS)
+    // ----------------------------------------------------
+    function getTeamMembersList() {
+      const map = {};
+      AppState.p.forEach(p => {
+        const rawName = (p.resp && p.resp.trim()) ? p.resp.trim() : "Sem Responsável";
+        if (!map[rawName]) {
+          map[rawName] = {
+            name: rawName,
+            projects: [],
+            totalValor: 0,
+            totalRec: 0,
+            totalCustoResp: 0,
+            totalCustosExtras: 0,
+            concludedValor: 0,
+            concludedCustoResp: 0,
+            pendingCustoResp: 0,
+            doneCount: 0,
+            devCount: 0,
+            apprCount: 0,
+            lateCount: 0,
+            disciplines: new Set()
+          };
+        }
+        const m = map[rawName];
+        m.projects.push(p);
+        m.totalValor += (+p.valor || 0);
+        m.totalRec += (+p.rec || 0);
+        m.totalCustoResp += (+p.custoResp || 0);
+        m.totalCustosExtras += (+p.custosExtras || 0);
+        if (p.area) m.disciplines.add(p.area);
+
+        if (p.st === STATUS_DONE) {
+          m.doneCount++;
+          m.concludedValor += (+p.valor || 0);
+          m.concludedCustoResp += (+p.custoResp || 0);
+        } else {
+          if (p.st === STATUS_APPR) m.apprCount++;
+          else m.devCount++;
+          if (isLate(p)) m.lateCount++;
+          m.pendingCustoResp += (+p.custoResp || 0);
+        }
+      });
+      return Object.values(map).sort((a, b) => b.totalValor - a.totalValor);
+    }
+
+    // ----------------------------------------------------
+    // RENDER: VIEW 1 - PAINEL / VISÃO GERAL APROFUNDADA
+    // ----------------------------------------------------
+    function renderOverview() {
+      const openProjects = AppState.p.filter(p => p.st !== STATUS_DONE)
+        .sort((a, b) => a.prazo.localeCompare(b.prazo));
+      const lateProjects = openProjects.filter(isLate);
+      const totalToReceive = AppState.p.reduce((acc, p) => acc + getBalance(p), 0);
+      const doneCount = AppState.p.filter(p => p.st === STATUS_DONE).length;
+      const inDevCount = AppState.p.filter(p => p.st === STATUS_DEV).length;
+      const inApprCount = AppState.p.filter(p => p.st === STATUS_APPR).length;
+      const totalProjects = AppState.p.length;
+
+      // 1. Barra de Distribuição Operacional (Pulse Strip)
+      const pctDone = totalProjects ? Math.round((doneCount / totalProjects) * 100) : 0;
+      const pctDev = totalProjects ? Math.round((inDevCount / totalProjects) * 100) : 0;
+      const pctAppr = totalProjects ? Math.round((inApprCount / totalProjects) * 100) : 0;
+      const pctLate = totalProjects ? Math.round((lateProjects.length / totalProjects) * 100) : 0;
+
+      document.getElementById("pulse-completion-rate").textContent = `${pctDone}% das Obras Concluídas (${doneCount}/${totalProjects})`;
+
+      document.getElementById("pipeline-bar-strip").innerHTML = `
+        <div class="pipeline-seg seg-done" style="width:${pctDone}%" title="Concluídas: ${doneCount} (${pctDone}%)" onclick="setTableFilter('${STATUS_DONE}'); switchTab('proj')"></div>
+        <div class="pipeline-seg seg-dev" style="width:${pctDev}%" title="Em Desenvolvimento: ${inDevCount} (${pctDev}%)" onclick="setTableFilter('${STATUS_DEV}'); switchTab('proj')"></div>
+        <div class="pipeline-seg seg-appr" style="width:${pctAppr}%" title="Aguardando Aprovação: ${inApprCount} (${pctAppr}%)" onclick="setTableFilter('${STATUS_APPR}'); switchTab('proj')"></div>
+        <div class="pipeline-seg seg-late" style="width:${pctLate}%" title="Atrasadas: ${lateProjects.length} (${pctLate}%)" onclick="setTableFilter('late'); switchTab('proj')"></div>
+      `;
+
+      document.getElementById("pipeline-legend-strip").innerHTML = `
+        <div class="legend-item" onclick="setTableFilter('${STATUS_DONE}'); switchTab('proj')">
+          <span class="legend-dot seg-done"></span>
+          <b>${doneCount}</b> Concluídas (${pctDone}%)
+        </div>
+        <div class="legend-item" onclick="setTableFilter('${STATUS_DEV}'); switchTab('proj')">
+          <span class="legend-dot seg-dev"></span>
+          <b>${inDevCount}</b> Em Desenvolvimento (${pctDev}%)
+        </div>
+        <div class="legend-item" onclick="setTableFilter('${STATUS_APPR}'); switchTab('proj')">
+          <span class="legend-dot seg-appr"></span>
+          <b>${inApprCount}</b> Aguardando Aprovação (${pctAppr}%)
+        </div>
+        <div class="legend-item" onclick="setTableFilter('late'); switchTab('proj')">
+          <span class="legend-dot seg-late"></span>
+          <b style="color:var(--st-late);">${lateProjects.length}</b> Prazos Vencidos (${pctLate}%)
+        </div>
+      `;
+
+      // 2. KPIs Operacionais
+      const kpisHtml = `
+        <div class="kpi-card kpi-dev" onclick="setTableFilter('${STATUS_DEV}'); switchTab('proj')">
+          <div class="kpi-card-head">
+            <span class="kpi-label">Em Desenvolvimento</span>
+            <div class="kpi-icon" style="color:var(--st-dev);">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            </div>
+          </div>
+          <div class="kpi-val">${inDevCount}</div>
+        </div>
+
+        <div class="kpi-card kpi-appr" onclick="setTableFilter('${STATUS_APPR}'); switchTab('proj')">
+          <div class="kpi-card-head">
+            <span class="kpi-label">Aguardando Aprovação</span>
+            <div class="kpi-icon" style="color:var(--st-appr);">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg>
+            </div>
+          </div>
+          <div class="kpi-val">${inApprCount}</div>
+        </div>
+
+        <div class="kpi-card kpi-late ${lateProjects.length > 0 ? "alert-late" : ""}" onclick="setTableFilter('late'); switchTab('proj')">
+          <div class="kpi-card-head">
+            <span class="kpi-label">Prazos Vencidos</span>
+            <div class="kpi-icon" style="color:var(--st-late);">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            </div>
+          </div>
+          <div class="kpi-val">${lateProjects.length}</div>
+        </div>
+
+        <div class="kpi-card kpi-money" onclick="openReceivablesModal()" title="Clique para ver todos os projetos que ainda faltam pagar">
+          <div class="kpi-card-head">
+            <span class="kpi-label">Total a Receber</span>
+            <div class="kpi-icon" style="color:var(--st-done);">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" x2="12" y1="2" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            </div>
+          </div>
+          <div class="kpi-val">${toBRL(totalToReceive)}</div>
+        </div>
+      `;
+      document.getElementById("painel-kpis").innerHTML = kpisHtml;
+
+      // 3. Horizonte da Semana (Próximos 7 dias) - Inclui TODOS os prazos (Concluídos e Ativos)
+      const weekContainer = document.getElementById("weekly-horizon-container");
+      let weekHtml = "";
+      const baseToday = new Date();
+      for (let i = 0; i < 7; i++) {
+        const d = new Date(baseToday);
+        d.setDate(baseToday.getDate() + i);
+        const dStr = isoDate(d);
+        const dayAll = AppState.p.filter(p => p.prazo === dStr);
+        const dayActive = dayAll.filter(p => p.st !== STATUS_DONE);
+        const dayDone = dayAll.filter(p => p.st === STATUS_DONE);
+        const dayName = d.toLocaleDateString("pt-BR", { weekday: "short" });
+        const isCurrentDay = i === 0;
+
+        let badges = [];
+        if (dayActive.length > 0) {
+          badges.push(`<span class="horizon-badge badge-dev"><b>${dayActive.length}</b> ativa${dayActive.length > 1 ? "s" : ""}</span>`);
+        }
+        if (dayDone.length > 0) {
+          badges.push(`<span class="horizon-badge badge-done">✓ <b>${dayDone.length}</b> entregue${dayDone.length > 1 ? "s" : ""}</span>`);
+        }
+        if (dayAll.length === 0) {
+          badges.push(`<span class="horizon-badge badge-free">Livre</span>`);
+        }
+
+        const tooltipDesc = dayAll.length ? dayAll.map(p => `${p.cli} · ${p.obra} (${p.st})`).join(' | ') : 'Sem entregas nesta data';
+
+        weekHtml += `
+          <div class="horizon-day ${isCurrentDay ? "is-today" : ""}" onclick="selectedCalDayStr='${dStr}'; switchTab('cal');" title="${escapeHTML(tooltipDesc)}">
+            <span class="horizon-day-name">${isCurrentDay ? "Hoje" : dayName}</span>
+            <span class="horizon-day-date">${d.getDate()}/${d.getMonth() + 1}</span>
+            <div style="display:flex; flex-direction:column; gap:4px; align-items:center; width:100%;">
+              ${badges.join("")}
+            </div>
+          </div>
+        `;
+      }
+      weekContainer.innerHTML = weekHtml;
+
+      // 4. O PICO: Radar Tático de Entrega Crítica
+      const nextUrgent = openProjects[0];
+      const spotlightEl = document.getElementById("spotlight-container");
+      if (nextUrgent) {
+        const late = isLate(nextUrgent);
+        const diff = diffDays(nextUrgent.prazo, TODAY);
+        const urgentClass = late ? "is-late" : diff <= 2 ? "is-urgent" : "";
+        const badgeLabel = late ? "Atenção: Prazo Crítico Atrasado" : "Próximo Marco Prioritário";
+        const lucroProj = getLucro(nextUrgent);
+
+        spotlightEl.innerHTML = `
+          <div class="spotlight-card ${urgentClass}">
+            <div class="spotlight-main">
+              <span class="spotlight-tag">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg>
+                ${badgeLabel}
+              </span>
+              <h2 class="spotlight-title">${escapeHTML(nextUrgent.cli)} · ${escapeHTML(nextUrgent.obra)}</h2>
+              <div class="spotlight-meta">
+                <span class="project-id">${escapeHTML(nextUrgent.id)}</span>
+                <span>•</span>
+                <span class="pill-discipline">${escapeHTML(nextUrgent.area || "Geral")}</span>
+                <span>•</span>
+                <span class="status-badge status-${getStatusClass(nextUrgent.st)}" onclick="cycleStatus('${nextUrgent.id}', event)" title="Clique para mudar status">
+                  ${escapeHTML(nextUrgent.st)}
+                </span>
+                ${nextUrgent.resp ? `<span>• Resp: <span class="member-clickable" onclick="openMemberModal('${escapeHTML(nextUrgent.resp)}')" title="Abrir Raio-X de ${escapeHTML(nextUrgent.resp)}"><b>${escapeHTML(nextUrgent.resp)}</b></span></span>` : ""}
+              </div>
+            </div>
+
+            <div class="spotlight-details">
+              <div class="spotlight-col">
+                <small>Data Limite</small>
+                <b>${formatDate(nextUrgent.prazo)}</b>
+                <div style="margin-top:3px">${getDeadlineBadge(nextUrgent)}</div>
+              </div>
+              <div class="spotlight-col">
+                <small>Saldo a Receber</small>
+                <b>${toBRL(getBalance(nextUrgent))}</b>
+                <div style="font-size:11.5px; color:var(--tx-dim); margin-top:3px">Contratado: ${toBRL(nextUrgent.valor)} · Lucro: <b style="color:var(--st-done);">${toBRL(lucroProj)}</b></div>
+              </div>
+            </div>
+
+            <div class="spotlight-actions">
+              <button class="btn btn-primary" onclick="markCompleted('${nextUrgent.id}')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                Concluir Obra
+              </button>
+              <button class="btn btn-secondary" onclick="openProjectModal('${nextUrgent.id}')">
+                Inspecionar
+              </button>
+            </div>
+          </div>
+        `;
+      } else {
+        spotlightEl.innerHTML = `
+          <div class="card empty-state">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--st-done)" stroke-width="2" style="margin-bottom:8px;"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+            <p><b>Nenhum projeto pendente de entrega no momento.</b></p>
+            <span style="font-size:13px; color:var(--mu);">Todos os projetos registrados estão com status concluído.</span>
+          </div>
+        `;
+      }
+
+      // 5. Lista Tática em Aberto com Custos e Lucro
+      document.getElementById("badge-open-count").textContent = openProjects.length;
+      const listEl = document.getElementById("tactical-open-list");
+      if (openProjects.length) {
+        listEl.innerHTML = openProjects.map(p => {
+          const lucro = getLucro(p);
+          const margem = getMargem(p);
+          return `
+            <div class="tactical-item ${isLate(p) ? "row-late" : ""}">
+              <div class="tactical-main">
+                <b>${escapeHTML(p.cli)} · ${escapeHTML(p.obra)}</b>
+                <span>
+                  ${escapeHTML(p.id)} • ${escapeHTML(p.area || "Sem área")} 
+                  ${p.resp ? `• Resp: <span class="member-clickable" onclick="event.stopPropagation(); openMemberModal('${escapeHTML(p.resp)}')" title="Ver Raio-X"><span class="team-avatar" style="width:18px; height:18px; font-size:9px;">${getInitials(p.resp)}</span> <b>${escapeHTML(p.resp)}</b></span>` : ""}
+                </span>
+              </div>
+              <div class="tactical-metric">
+                <small>Entrega</small>
+                <b class="deadline-text">${formatDate(p.prazo)}</b>
+                <div style="margin-top:2px">${getDeadlineBadge(p)}</div>
+              </div>
+              <div class="tactical-metric">
+                <small>Saldo a Receber</small>
+                <b>${toBRL(getBalance(p))}</b>
+                <div style="font-size:11px; color:var(--tx-dim);">Honorários Resp: <b style="color:var(--purple);">${toBRL(p.custoResp || 0)}</b></div>
+              </div>
+              <div class="tactical-metric">
+                <small>Lucro Projetado LR</small>
+                <b style="color:${lucro >= 0 ? "var(--st-done)" : "var(--st-late)"};">${toBRL(lucro)}</b>
+                <div style="font-size:11px; color:var(--mu);">${margem}% margem</div>
+              </div>
+              <div class="tactical-actions">
+                <span class="status-badge status-${getStatusClass(p.st)}" onclick="cycleStatus('${p.id}', event)" title="Clique para mudar status">
+                  ${escapeHTML(p.st)}
+                </span>
+                <button class="btn btn-secondary" onclick="markCompleted('${p.id}')" title="Marcar como concluído">
+                  ✓ Concluir
+                </button>
+                <button class="btn btn-ghost" onclick="openProjectModal('${p.id}')">
+                  Detalhes
+                </button>
+              </div>
+            </div>
+          `;
+        }).join("");
+      } else {
+        listEl.innerHTML = `<div class="empty-state">Sem obras pendentes.</div>`;
+      }
+    }
+
+    // ----------------------------------------------------
+    // RENDER: VIEW 2 - BANCO DE PROJETOS & TABELA EXPANDIDA
+    // ----------------------------------------------------
+    let currentFilter = "all";
+    const filterOptions = [
+      ["all", "Todas as Obras"],
+      [STATUS_DEV, "Em Desenvolvimento"],
+      [STATUS_APPR, "Aguardando Aprovação"],
+      [STATUS_DONE, "Concluídos"],
+      ["late", "Atrasados"]
+    ];
+
+    function renderProjectsTable() {
+      const q = (document.getElementById("project-search-input").value || "").trim().toLowerCase();
+      
+      const filtered = AppState.p.filter(p => {
+        let matchesCategory = true;
+        if (currentFilter === "late") {
+          matchesCategory = isLate(p);
+        } else if (currentFilter !== "all") {
+          matchesCategory = (p.st === currentFilter);
+        }
+
+        let matchesQuery = true;
+        if (q) {
+          const haystack = [p.id, p.cli, p.obra, p.area, p.resp, p.obs].join(" ").toLowerCase();
+          matchesQuery = haystack.includes(q);
+        }
+        return matchesCategory && matchesQuery;
+      }).sort((a, b) => b.id.localeCompare(a.id));
+
+      // Botões de filtro estilo ClickUp com badges numéricos
+      const filterWrap = document.getElementById("project-filter-buttons");
+      filterWrap.innerHTML = filterOptions.map(([key, label]) => {
+        let count = 0;
+        if (key === "all") count = AppState.p.length;
+        else if (key === "late") count = AppState.p.filter(isLate).length;
+        else count = AppState.p.filter(p => p.st === key).length;
+        
+        const activeCls = currentFilter === key ? "active" : "";
+        return `
+          <button class="filter-btn ${activeCls}" onclick="setTableFilter('${key}')">
+            ${label} <span style="font-size:11px; opacity:0.85; font-family:var(--font-mono)">(${count})</span>
+          </button>
+        `;
+      }).join("");
+
+      document.getElementById("badge-total-count").textContent = AppState.p.length;
+
+      // Renderiza as linhas da tabela com colunas financeiras e perfil do responsável
+      const tbody = document.getElementById("projects-table-body");
+      const emptyNotice = document.getElementById("table-empty-notice");
+
+      if (filtered.length) {
+        emptyNotice.style.display = "none";
+        tbody.innerHTML = filtered.map(p => {
+          const pct = getPercentage(p);
+          const late = isLate(p);
+          const initials = getInitials(p.resp);
+          const custoR = +p.custoResp || 0;
+          const custoE = +p.custosExtras || 0;
+          const lucro = getLucro(p);
+          const margem = getMargem(p);
+
+          return `
+            <tr class="row-clickable ${late ? "row-late" : ""}" onclick="handleRowClick(event, '${p.id}')">
+              <td><span class="project-id">${escapeHTML(p.id)}</span></td>
+              <td><b>${escapeHTML(p.cli)}</b></td>
+              <td>${escapeHTML(p.obra)}</td>
+              <td><span class="pill-discipline">${escapeHTML(p.area || "Geral")}</span></td>
+              <td class="${late ? "deadline-text" : ""}">${formatDate(p.prazo)}</td>
+              <td>
+                <span class="status-badge status-${getStatusClass(p.st)}" onclick="cycleStatus('${p.id}', event)" title="Clique para alternar status">
+                  ${escapeHTML(p.st)}
+                </span>
+              </td>
+              <td class="num">${toBRL(p.valor)}</td>
+              <td class="num">${toBRL(p.rec)}</td>
+              <td class="num"><b>${toBRL(getBalance(p))}</b></td>
+              <td class="num" style="color:var(--purple); font-weight:600;">${toBRL(custoR)}</td>
+              <td class="num" style="color:var(--st-appr);">${toBRL(custoE)}</td>
+              <td class="num">
+                <b style="color:${lucro >= 0 ? "var(--st-done)" : "var(--st-late)"}; font-family:var(--font-mono);">${toBRL(lucro)}</b>
+                <div style="font-size:11px; color:var(--tx-dim);">${margem}% margem</div>
+              </td>
+              <td>
+                ${p.resp ? `
+                  <div class="member-clickable" onclick="event.stopPropagation(); openMemberModal('${escapeHTML(p.resp)}')" title="Ver Raio-X completo de ${escapeHTML(p.resp)}">
+                    <span class="team-avatar">${initials}</span>
+                    <span style="font-size:13px; font-weight:600;">${escapeHTML(p.resp)}</span>
+                  </div>
+                ` : `<span style="color:var(--mu); font-size:12px;">Não atribuído</span>`}
+              </td>
+              <td>
+                <button class="btn btn-ghost btn-icon" onclick="event.stopPropagation(); openProjectModal('${p.id}')" title="Editar obra e custos">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
+                </button>
+              </td>
+            </tr>
+          `;
+        }).join("");
+      } else {
+        tbody.innerHTML = "";
+        emptyNotice.style.display = "block";
+      }
+    }
+
+    function setTableFilter(filterKey) {
+      currentFilter = filterKey;
+      renderProjectsTable();
+    }
+
+    function handleRowClick(e, id) {
+      openProjectModal(id);
+    }
+
+    document.getElementById("project-search-input").addEventListener("input", () => {
+      renderProjectsTable();
+    });
+
+    window.addEventListener("keydown", e => {
+      if (e.key === "/" && document.activeElement.tagName !== "INPUT" && document.activeElement.tagName !== "TEXTAREA") {
+        e.preventDefault();
+        switchTab("proj");
+        const searchInput = document.getElementById("project-search-input");
+        searchInput.focus();
+        searchInput.select();
+      }
+    });
+
+    // Exportação em formato CSV com todos os Custos e Lucro
+    function exportCSV() {
+      const headers = [
+        "ID", "Cliente", "Obra", "Disciplina", "Tipo", "Data Contratação", "Prazo", "Status",
+        "Contratado (R$)", "Recebido (R$)", "Saldo a Receber (R$)", "% Quitado",
+        "Honorários Responsável (R$)", "Custos Extras (R$)", "Custo Total (R$)",
+        "Lucro Projetado LR (R$)", "Margem (%)", "Responsável", "Detalhamento Custos", "Observações"
+      ];
+
+      const rows = AppState.p.map(p => {
+        const cTot = getCustoTotal(p);
+        const lucro = getLucro(p);
+        const margem = getMargem(p);
+        return [
+          `"${p.id}"`,
+          `"${(p.cli || "").replace(/"/g, '""')}"`,
+          `"${(p.obra || "").replace(/"/g, '""')}"`,
+          `"${(p.area || "").replace(/"/g, '""')}"`,
+          `"${(p.tipo || "").replace(/"/g, '""')}"`,
+          `"${p.ini || ""}"`,
+          `"${p.prazo || ""}"`,
+          `"${p.st || ""}"`,
+          (p.valor || 0).toFixed(2),
+          (p.rec || 0).toFixed(2),
+          getBalance(p).toFixed(2),
+          getPercentage(p) + "%",
+          (p.custoResp || 0).toFixed(2),
+          (p.custosExtras || 0).toFixed(2),
+          cTot.toFixed(2),
+          lucro.toFixed(2),
+          margem + "%",
+          `"${(p.resp || "").replace(/"/g, '""')}"`,
+          `"${(p.custosNotas || "").replace(/"/g, '""')}"`,
+          `"${(p.obs || "").replace(/"/g, '""')}"`
+        ];
+      });
+
+      const csvContent = "\uFEFF" + [headers.join(";"), ...rows.map(r => r.join(";"))].join("\r\n");
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", `LR_Engenharia_Projetos_Lucratividade_${TODAY}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      showToast("Planilha financeira e operacional exportada com sucesso!");
+    }
+
+    // ----------------------------------------------------
+    // CONTROLE DE PERÍODO & DRILL-DOWN DO GRÁFICO FINANCEIRO
+    // ----------------------------------------------------
+    let currentChartPeriod = "ALL";
+
+    function setChartPeriod(period) {
+      currentChartPeriod = period;
+      document.querySelectorAll(".period-btn").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.period === period);
+      });
+      const customDatesEl = document.getElementById("chart-custom-dates");
+      if (customDatesEl) {
+        customDatesEl.style.display = (period === "CUSTOM") ? "block" : "none";
+      }
+      if (period === "CUSTOM") {
+        const startEl = document.getElementById("chart-date-start");
+        const endEl = document.getElementById("chart-date-end");
+        if (!startEl.value) startEl.value = "2026-01-01";
+        if (!endEl.value) endEl.value = TODAY;
+      }
+      renderFinancialView();
+    }
+
+    function applyCustomChartDates() {
+      const s = document.getElementById("chart-date-start").value;
+      const e = document.getElementById("chart-date-end").value;
+      if (!s || !e) {
+        showToast("Selecione data inicial e data final.");
+        return;
+      }
+      if (s > e) {
+        showToast("Data inicial não pode ser posterior à data final.");
+        return;
+      }
+      renderFinancialView();
+      showToast(`Filtro aplicado: de ${formatDate(s)} até ${formatDate(e)}`);
+    }
+
+    function getPeriodRange() {
+      const ref = parseDate(TODAY);
+      if (currentChartPeriod === "30D") {
+        const s = new Date(ref); s.setDate(s.getDate() - 30);
+        const e = new Date(ref); e.setDate(e.getDate() + 1);
+        return [isoDate(s), isoDate(e)];
+      } else if (currentChartPeriod === "3M") {
+        const s = new Date(ref); s.setMonth(s.getMonth() - 3);
+        const e = new Date(ref); e.setDate(e.getDate() + 1);
+        return [isoDate(s), isoDate(e)];
+      } else if (currentChartPeriod === "6M") {
+        const s = new Date(ref); s.setMonth(s.getMonth() - 6);
+        const e = new Date(ref); e.setDate(e.getDate() + 1);
+        return [isoDate(s), isoDate(e)];
+      } else if (currentChartPeriod === "1A") {
+        const s = new Date(ref); s.setFullYear(s.getFullYear() - 1);
+        const e = new Date(ref); e.setDate(e.getDate() + 60);
+        return [isoDate(s), isoDate(e)];
+      } else if (currentChartPeriod === "CUSTOM") {
+        const s = document.getElementById("chart-date-start") ? document.getElementById("chart-date-start").value : "";
+        const e = document.getElementById("chart-date-end") ? document.getElementById("chart-date-end").value : "";
+        return [s || "2020-01-01", e || "2030-12-31"];
+      }
+      return ["2020-01-01", "2030-12-31"];
+    }
+
+    function getProjectsInPeriod() {
+      const [start, end] = getPeriodRange();
+      return AppState.p.filter(p => {
+        const d = p.ini || p.prazo || "2026-01-01";
+        return d >= start && d <= end;
+      });
+    }
+
+    function getPeriodLabel() {
+      if (currentChartPeriod === "30D") return "Últimos 30 Dias";
+      if (currentChartPeriod === "3M") return "Últimos 3 Meses";
+      if (currentChartPeriod === "6M") return "Últimos 6 Meses";
+      if (currentChartPeriod === "1A") return "Último 1 Ano";
+      if (currentChartPeriod === "CUSTOM") {
+        const [s, e] = getPeriodRange();
+        return `Período ${formatDate(s)} a ${formatDate(e)}`;
+      }
+      return "Todo o Período Histórico";
+    }
+
+    // Modal de Detalhamento do Período (Drill-Down)
+    const breakdownModal = document.getElementById("period-breakdown-modal");
+
+    function openPeriodBreakdown(metricType) {
+      const list = getProjectsInPeriod();
+      if (!list.length) {
+        showToast("Nenhum projeto registrado no período selecionado.");
+        return;
+      }
+
+      const modalTitle = document.getElementById("breakdown-modal-title");
+      const modalSubtitle = document.getElementById("breakdown-modal-subtitle");
+      const modalIcon = document.getElementById("breakdown-modal-icon");
+      const summaryBanner = document.getElementById("breakdown-summary-banner");
+      const thead = document.getElementById("breakdown-thead");
+      const tbody = document.getElementById("breakdown-tbody");
+
+      const periodName = getPeriodLabel();
+
+      if (metricType === "faturamento") {
+        const totalFat = list.reduce((acc, p) => acc + (+p.valor || 0), 0);
+        const sorted = [...list].sort((a, b) => (+b.valor || 0) - (+a.valor || 0));
+
+        modalIcon.innerHTML = "📈";
+        modalTitle.textContent = "Detalhamento de Faturamento no Período";
+        modalSubtitle.textContent = `${periodName} · ${sorted.length} obras ordenadas da maior receita para a menor`;
+
+        summaryBanner.innerHTML = `
+          <div>
+            <span style="font-size:11.5px; text-transform:uppercase; font-weight:700; color:var(--tx-dim); display:block;">Volume de Faturamento no Período:</span>
+            <b style="font-size:18px; font-family:var(--font-mono); color:var(--ac);">${toBRL(totalFat)}</b>
+          </div>
+          <div style="font-size:12.5px; color:var(--tx-dim);">
+            ${sorted.length} contrato(s) no intervalo selecionado
+          </div>
+        `;
+
+        thead.innerHTML = `
+          <tr>
+            <th style="width:36px;">#</th>
+            <th>Código ID</th>
+            <th>Cliente & Obra</th>
+            <th>Disciplina</th>
+            <th>Data</th>
+            <th>Status</th>
+            <th class="num" style="color:var(--ac);">Faturamento (R$)</th>
+            <th class="num">Já Recebido</th>
+            <th>Responsável</th>
+            <th>Ações</th>
+          </tr>
+        `;
+
+        tbody.innerHTML = sorted.map((p, idx) => `
+          <tr>
+            <td><b style="color:var(--mu); font-family:var(--font-mono);">#${idx + 1}</b></td>
+            <td><span class="project-id">${escapeHTML(p.id)}</span></td>
+            <td><b>${escapeHTML(p.cli)}</b> · ${escapeHTML(p.obra)}</td>
+            <td><span class="pill-discipline">${escapeHTML(p.area || "Geral")}</span></td>
+            <td>${formatDate(p.ini || p.prazo)}</td>
+            <td><span class="status-badge status-${getStatusClass(p.st)}">${escapeHTML(p.st)}</span></td>
+            <td class="num" style="color:var(--ac); font-family:var(--font-mono); font-weight:800; font-size:14px;">${toBRL(p.valor)}</td>
+            <td class="num">${toBRL(p.rec)}</td>
+            <td>${escapeHTML(p.resp || "—")}</td>
+            <td>
+              <button class="btn btn-secondary btn-sm" onclick="openProjectModal('${p.id}')">
+                Inspecionar
+              </button>
+            </td>
+          </tr>
+        `).join("");
+
+      } else if (metricType === "custos") {
+        const totalCustos = list.reduce((acc, p) => acc + getCustoTotal(p), 0);
+        const totalResp = list.reduce((acc, p) => acc + (+p.custoResp || 0), 0);
+        const totalExt = list.reduce((acc, p) => acc + (+p.custosExtras || 0), 0);
+        const sorted = [...list].sort((a, b) => getCustoTotal(b) - getCustoTotal(a));
+
+        modalIcon.innerHTML = "📉";
+        modalTitle.textContent = "Detalhamento de Custos por Projeto no Período";
+        modalSubtitle.textContent = `${periodName} · Custos separados por obra, do maior para o menor`;
+
+        summaryBanner.innerHTML = `
+          <div>
+            <span style="font-size:11.5px; text-transform:uppercase; font-weight:700; color:var(--tx-dim); display:block;">Custos Totais no Período:</span>
+            <b style="font-size:18px; font-family:var(--font-mono); color:var(--st-late);">${toBRL(totalCustos)}</b>
+          </div>
+          <div style="font-size:12.5px; color:var(--tx-dim);">
+            Honorários de Equipe: <b style="color:var(--purple);">${toBRL(totalResp)}</b> · Custos Extras da Obra: <b style="color:var(--st-appr);">${toBRL(totalExt)}</b>
+          </div>
+        `;
+
+        thead.innerHTML = `
+          <tr>
+            <th style="width:36px;">#</th>
+            <th>Código ID</th>
+            <th>Cliente & Obra</th>
+            <th>Disciplina</th>
+            <th>Responsável</th>
+            <th class="num" style="color:var(--purple);">Honorários Resp.</th>
+            <th class="num" style="color:var(--st-appr);">Custos Extras</th>
+            <th class="num" style="color:var(--st-late);">Custo Total (R$)</th>
+            <th>Detalhamento / Notas</th>
+            <th>Ações</th>
+          </tr>
+        `;
+
+        tbody.innerHTML = sorted.map((p, idx) => `
+          <tr>
+            <td><b style="color:var(--mu); font-family:var(--font-mono);">#${idx + 1}</b></td>
+            <td><span class="project-id">${escapeHTML(p.id)}</span></td>
+            <td><b>${escapeHTML(p.cli)}</b> · ${escapeHTML(p.obra)}</td>
+            <td><span class="pill-discipline">${escapeHTML(p.area || "Geral")}</span></td>
+            <td>${escapeHTML(p.resp || "—")}</td>
+            <td class="num" style="color:var(--purple); font-weight:700;">${toBRL(p.custoResp || 0)}</td>
+            <td class="num" style="color:var(--st-appr);">${toBRL(p.custosExtras || 0)}</td>
+            <td class="num" style="color:var(--st-late); font-family:var(--font-mono); font-weight:800; font-size:14px;">${toBRL(getCustoTotal(p))}</td>
+            <td style="font-size:11.5px; color:var(--tx-dim);">${escapeHTML(p.custosNotas || p.obs || "—")}</td>
+            <td>
+              <button class="btn btn-secondary btn-sm" onclick="openProjectModal('${p.id}')">
+                Inspecionar
+              </button>
+            </td>
+          </tr>
+        `).join("");
+
+      } else if (metricType === "lucro") {
+        const totalFat = list.reduce((acc, p) => acc + (+p.valor || 0), 0);
+        const totalCustos = list.reduce((acc, p) => acc + getCustoTotal(p), 0);
+        const totalLucro = totalFat - totalCustos;
+        const margemGeral = totalFat > 0 ? Math.round((totalLucro / totalFat) * 100) : 0;
+        const sorted = [...list].sort((a, b) => getLucro(b) - getLucro(a));
+
+        modalIcon.innerHTML = "💰";
+        modalTitle.textContent = "Detalhamento de Lucro Líquido por Projeto";
+        modalSubtitle.textContent = `${periodName} · Obras que geraram retorno para a LR, do maior lucro para o menor`;
+
+        summaryBanner.innerHTML = `
+          <div>
+            <span style="font-size:11.5px; text-transform:uppercase; font-weight:700; color:var(--tx-dim); display:block;">Lucro Líquido Total no Período:</span>
+            <b style="font-size:18px; font-family:var(--font-mono); color:var(--st-done);">${toBRL(totalLucro)}</b>
+          </div>
+          <div style="font-size:12.5px; color:var(--tx-dim);">
+            Margem de Lucro Média: <b style="color:var(--st-done);">${margemGeral}%</b> (${sorted.filter(p => getLucro(p) > 0).length} obras lucrativas)
+          </div>
+        `;
+
+        thead.innerHTML = `
+          <tr>
+            <th style="width:36px;">#</th>
+            <th>Código ID</th>
+            <th>Cliente & Obra</th>
+            <th>Disciplina & Resp.</th>
+            <th class="num">Faturamento</th>
+            <th class="num">Custo Total</th>
+            <th class="num" style="color:var(--st-done);">Lucro Líquido (R$)</th>
+            <th>Margem</th>
+            <th>Status</th>
+            <th>Ações</th>
+          </tr>
+        `;
+
+        tbody.innerHTML = sorted.map((p, idx) => {
+          const lucro = getLucro(p);
+          const margem = getMargem(p);
+          return `
+            <tr>
+              <td><b style="color:var(--mu); font-family:var(--font-mono);">#${idx + 1}</b></td>
+              <td><span class="project-id">${escapeHTML(p.id)}</span></td>
+              <td><b>${escapeHTML(p.cli)}</b> · ${escapeHTML(p.obra)}</td>
+              <td><span class="pill-discipline">${escapeHTML(p.area || "Geral")}</span> ${p.resp ? "• " + escapeHTML(p.resp) : ""}</td>
+              <td class="num">${toBRL(p.valor)}</td>
+              <td class="num">${toBRL(getCustoTotal(p))}</td>
+              <td class="num" style="color:${lucro >= 0 ? "var(--st-done)" : "var(--st-late)"}; font-family:var(--font-mono); font-weight:800; font-size:14px;">${toBRL(lucro)}</td>
+              <td>
+                <span class="margin-pill ${margem >= 50 ? "" : margem >= 20 ? "margin-warn" : "margin-danger"}">${margem}%</span>
+              </td>
+              <td><span class="status-badge status-${getStatusClass(p.st)}">${escapeHTML(p.st)}</span></td>
+              <td>
+                <button class="btn btn-secondary btn-sm" onclick="openProjectModal('${p.id}')">
+                  Inspecionar
+                </button>
+              </td>
+            </tr>
+          `;
+        }).join("");
+      }
+
+      breakdownModal.showModal();
+    }
+
+    function closePeriodBreakdown() {
+      breakdownModal.close();
+    }
+
+    // ----------------------------------------------------
+    // CONTROLE DE QUITAÇÃO & MODAL DE CONTAS A RECEBER
+    // ----------------------------------------------------
+    function markAsPaid(id, event) {
+      if (event) event.stopPropagation();
+      const p = AppState.p.find(x => x.id === id);
+      if (!p) return;
+
+      const balance = getBalance(p);
+      if (balance <= 0) {
+        showToast(`A obra ${id} já está 100% quitada.`);
+        return;
+      }
+
+      p.rec = (+p.valor || 0);
+      saveState();
+      refreshAll();
+      triggerCelebration();
+      showToast(`Obra ${p.id}: Saldo de ${toBRL(balance)} marcado como recebido com sucesso!`, "💰");
+
+      const recModal = document.getElementById("receivables-modal");
+      if (recModal && recModal.open) {
+        renderReceivablesModal();
+      }
+    }
+
+    const receivablesModal = document.getElementById("receivables-modal");
+
+    function openReceivablesModal() {
+      renderReceivablesModal();
+      receivablesModal.showModal();
+    }
+
+    function closeReceivablesModal() {
+      receivablesModal.close();
+    }
+
+    function renderReceivablesModal() {
+      const q = (document.getElementById("receivables-search-input") ? document.getElementById("receivables-search-input").value : "").trim().toLowerCase();
+      const pending = AppState.p.filter(p => getBalance(p) > 0)
+        .filter(p => {
+          if (!q) return true;
+          const haystack = [p.id, p.cli, p.obra, p.area, p.resp].join(" ").toLowerCase();
+          return haystack.includes(q);
+        })
+        .sort((a, b) => getBalance(b) - getBalance(a));
+
+      const totalPending = AppState.p.reduce((acc, p) => acc + getBalance(p), 0);
+      document.getElementById("receivables-modal-total").textContent = toBRL(totalPending);
+
+      const listContainer = document.getElementById("modal-receivables-list");
+      if (pending.length) {
+        listContainer.innerHTML = pending.map(p => `
+          <div class="receivable-item">
+            <div class="receivable-info">
+              <b style="font-size:14px; color:var(--tx);">${escapeHTML(p.cli)} · ${escapeHTML(p.obra)}</b>
+              <div style="font-size:12px; color:var(--tx-dim); margin-top:2px;">
+                <span class="project-id">${escapeHTML(p.id)}</span> • ${escapeHTML(p.area || "Geral")} 
+                ${p.resp ? `• Resp: <span class="member-clickable" onclick="openMemberModal('${escapeHTML(p.resp)}')"><b>${escapeHTML(p.resp)}</b></span>` : ""}
+              </div>
+              <div style="font-size:11.5px; color:var(--tx-dim); margin-top:3px;">
+                Contratado: ${toBRL(p.valor)} · Já Recebido: <b style="color:var(--st-done);">${toBRL(p.rec)}</b> (${getPercentage(p)}% quitado)
+              </div>
+            </div>
+
+            <div class="receivable-right">
+              <div class="receivable-balance">
+                <small style="font-size:11px; color:var(--tx-dim); text-transform:uppercase; font-weight:700;">Saldo Pendente:</small>
+                <b style="font-family:var(--font-mono); font-size:16px; color:var(--st-late); display:block;">${toBRL(getBalance(p))}</b>
+              </div>
+              <div class="receivable-actions">
+                <button class="btn btn-primary btn-sm" onclick="markAsPaid('${p.id}', event)" title="Quitar saldo total desta obra">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                  Marcar como Recebido
+                </button>
+                <button class="btn btn-secondary btn-sm" onclick="openProjectModal('${p.id}')" title="Ver mais informações da obra">
+                  Ver Mais
+                </button>
+              </div>
+            </div>
+          </div>
+        `).join("");
+      } else {
+        listContainer.innerHTML = `<div class="empty-state" style="padding:40px 20px;">Nenhum saldo pendente a receber encontrado! Todos os contratos estão quitados.</div>`;
+      }
+    }
+
+    if (document.getElementById("receivables-search-input")) {
+      document.getElementById("receivables-search-input").addEventListener("input", renderReceivablesModal);
+    }
+
+    // ----------------------------------------------------
+    // RENDER: VIEW 3 - COCKPIT FINANCEIRO, GRÁFICOS & REPASSES
+    // ----------------------------------------------------
+    let activeCharts = [];
+
+    function renderFinancialView() {
+      const totalContratado = AppState.p.reduce((acc, p) => acc + (+p.valor || 0), 0);
+      const totalRecebido = AppState.p.reduce((acc, p) => acc + (+p.rec || 0), 0);
+      const totalSaldo = Math.max(0, totalContratado - totalRecebido);
+      const globalPercent = totalContratado > 0 ? Math.round((totalRecebido / totalContratado) * 100) : 0;
+
+      const totalCustoResp = AppState.p.reduce((acc, p) => acc + (+p.custoResp || 0), 0);
+      const totalCustosExtras = AppState.p.reduce((acc, p) => acc + (+p.custosExtras || 0), 0);
+      const totalCustos = totalCustoResp + totalCustosExtras;
+      const totalLucro = totalContratado - totalCustos;
+      const margemMedia = totalContratado > 0 ? Math.round((totalLucro / totalContratado) * 100) : 0;
+
+      // 1. KPIs Financeiros Executivos (6 Cards)
+      document.getElementById("financial-kpis").innerHTML = `
+        <div class="kpi-card kpi-money">
+          <div class="kpi-card-head">
+            <span class="kpi-label">Faturamento Total Contratado</span>
+            <div class="kpi-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            </div>
+          </div>
+          <div class="kpi-val">${toBRL(totalContratado)}</div>
+          <div class="kpi-sub" style="font-size:11.5px; color:var(--tx-dim); margin-top:2px;">Volume de ${AppState.p.length} contratos</div>
+        </div>
+
+        <div class="kpi-card kpi-dev">
+          <div class="kpi-card-head">
+            <span class="kpi-label">Receita Já em Caixa</span>
+            <div class="kpi-icon" style="color:var(--st-done);">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </div>
+          </div>
+          <div class="kpi-val" style="color:var(--st-done);">${toBRL(totalRecebido)}</div>
+          <div class="kpi-sub" style="font-size:11.5px; color:var(--tx-dim); margin-top:2px;">${globalPercent}% do volume quitado</div>
+        </div>
+
+        <div class="kpi-card kpi-late">
+          <div class="kpi-card-head">
+            <span class="kpi-label">Custos Totais Comprometidos</span>
+            <div class="kpi-icon" style="color:var(--st-late);">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            </div>
+          </div>
+          <div class="kpi-val">${toBRL(totalCustos)}</div>
+          <div class="kpi-sub" style="font-size:11.5px; color:var(--tx-dim); margin-top:2px;">Resp: ${toBRL(totalCustoResp)} · Extras: ${toBRL(totalCustosExtras)}</div>
+        </div>
+
+        <div class="kpi-card" style="border-left: 4px solid var(--st-done);">
+          <div class="kpi-card-head">
+            <span class="kpi-label">Lucro Líquido Projetado</span>
+            <div class="kpi-icon" style="color:var(--st-done);">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+            </div>
+          </div>
+          <div class="kpi-val" style="color:var(--st-done);">${toBRL(totalLucro)}</div>
+          <div class="kpi-sub" style="font-size:11.5px; color:var(--tx-dim); margin-top:2px;">Margem Média: <b>${margemMedia}%</b></div>
+        </div>
+
+        <div class="kpi-card kpi-late ${totalSaldo > 0 ? "alert-late" : ""}">
+          <div class="kpi-card-head">
+            <span class="kpi-label">Saldo Pendente a Receber</span>
+            <div class="kpi-icon" style="color:var(--st-late);">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" x2="12" y1="2" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            </div>
+          </div>
+          <div class="kpi-val">${toBRL(totalSaldo)}</div>
+          <div class="kpi-sub" style="font-size:11.5px; color:var(--tx-dim); margin-top:2px;">Contas a receber de clientes</div>
+        </div>
+
+        <div class="kpi-card" style="border-left: 4px solid var(--purple);">
+          <div class="kpi-card-head">
+            <span class="kpi-label">Honorários Totais da Equipe</span>
+            <div class="kpi-icon" style="color:var(--purple);">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+          </div>
+          <div class="kpi-val" style="color:var(--purple);">${toBRL(totalCustoResp)}</div>
+          <div class="kpi-sub" style="font-size:11.5px; color:var(--tx-dim); margin-top:2px;">Comprometido com parceiros</div>
+        </div>
+      `;
+
+      // 2. Tabela do Painel de Repasses da Equipe
+      const teamList = getTeamMembersList().filter(m => m.name !== "Sem Responsável");
+      const payoutsTbody = document.getElementById("team-payouts-tbody");
+      if (payoutsTbody) {
+        if (teamList.length) {
+          payoutsTbody.innerHTML = teamList.map(m => {
+            const lucroLR = m.totalValor - (m.totalCustoResp + m.totalCustosExtras);
+            const initials = getInitials(m.name);
+            return `
+              <tr>
+                <td>
+                  <div class="member-clickable" onclick="openMemberModal('${escapeHTML(m.name)}')">
+                    <span class="team-avatar">${initials}</span>
+                    <b style="font-size:13.5px;">${escapeHTML(m.name)}</b>
+                  </div>
+                </td>
+                <td>
+                  <span style="font-family:var(--font-mono); font-weight:700;">${m.projects.length} obra(s)</span>
+                  <div style="font-size:11px; color:var(--tx-dim);">${m.doneCount} concluída(s) · ${m.devCount + m.apprCount} ativa(s)</div>
+                </td>
+                <td class="num">${toBRL(m.totalValor)}</td>
+                <td class="num" style="color:var(--purple); font-weight:700;">${toBRL(m.totalCustoResp)}</td>
+                <td class="num" style="color:var(--st-done); font-weight:600;">${toBRL(m.concludedCustoResp)}</td>
+                <td class="num" style="color:var(--st-appr);">${toBRL(m.pendingCustoResp)}</td>
+                <td class="num" style="color:var(--st-done); font-family:var(--font-mono); font-weight:700;">${toBRL(lucroLR)}</td>
+                <td>
+                  <button class="btn btn-secondary btn-sm" onclick="openMemberModal('${escapeHTML(m.name)}')">
+                    Raio-X Completo →
+                  </button>
+                </td>
+              </tr>
+            `;
+          }).join("");
+        } else {
+          payoutsTbody.innerHTML = `<tr><td colspan="8" class="empty-state">Nenhum responsável cadastrado ainda.</td></tr>`;
+        }
+      }
+
+      // 3. Lista de Saldos Pendentes de Clientes com Botão 'Marcar como Recebido' e 'Ver Mais'
+      const pendingList = AppState.p.filter(p => getBalance(p) > 0)
+        .sort((a, b) => getBalance(b) - getBalance(a));
+
+      const recContainer = document.getElementById("receivables-container");
+      if (pendingList.length) {
+        recContainer.innerHTML = pendingList.map(p => `
+          <div class="receivable-item">
+            <div class="receivable-info">
+              <b style="font-size:14px; color:var(--tx);">${escapeHTML(p.cli)} · ${escapeHTML(p.obra)}</b>
+              <div style="font-size:12px; color:var(--tx-dim); margin-top:2px;">
+                <span class="project-id">${escapeHTML(p.id)}</span> • ${escapeHTML(p.area || "Geral")} 
+                ${p.resp ? `• Resp: <span class="member-clickable" onclick="openMemberModal('${escapeHTML(p.resp)}')"><b>${escapeHTML(p.resp)}</b></span>` : ""}
+              </div>
+              <div style="font-size:11.5px; color:var(--tx-dim); margin-top:3px;">
+                Contratado: ${toBRL(p.valor)} · Já Recebido: <b style="color:var(--st-done);">${toBRL(p.rec)}</b> (${getPercentage(p)}% quitado)
+              </div>
+            </div>
+
+            <div class="receivable-right">
+              <div class="receivable-balance">
+                <small style="font-size:11px; color:var(--tx-dim); text-transform:uppercase; font-weight:700;">Saldo Pendente:</small>
+                <b style="font-family:var(--font-mono); font-size:16px; color:var(--st-late); display:block;">${toBRL(getBalance(p))}</b>
+              </div>
+              <div class="receivable-actions">
+                <button class="btn btn-primary btn-sm" onclick="markAsPaid('${p.id}', event)" title="Quitar saldo desta obra">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                  Marcar como Recebido
+                </button>
+                <button class="btn btn-secondary btn-sm" onclick="openProjectModal('${p.id}')" title="Inspecionar obra e ver mais detalhes">
+                  Ver Mais
+                </button>
+              </div>
+            </div>
+          </div>
+        `).join("");
+      } else {
+        recContainer.innerHTML = `<div class="empty-state">Todos os saldos foram quitados!</div>`;
+      }
+
+      // 4. Renderização dos Gráficos com Chart.js
+      if (typeof Chart === "undefined") return;
+
+      activeCharts.forEach(c => c.destroy());
+      activeCharts = [];
+
+      const computed = getComputedStyle(document.documentElement);
+      const textColor = computed.getPropertyValue("--tx-dim").trim() || "#5c6278";
+      const borderColor = computed.getPropertyValue("--bd").trim() || "#dfe1e6";
+      const surfaceColor = computed.getPropertyValue("--sf").trim() || "#ffffff";
+      const accentColor = computed.getPropertyValue("--ac").trim() || "#0073ea";
+      const doneColor = computed.getPropertyValue("--st-done").trim() || "#00c875";
+      const apprColor = computed.getPropertyValue("--st-appr").trim() || "#fdab3d";
+      const purpleColor = computed.getPropertyValue("--purple").trim() || "#7950f2";
+      const redColor = computed.getPropertyValue("--st-late").trim() || "#e2445c";
+
+      Chart.defaults.color = textColor;
+      Chart.defaults.borderColor = borderColor;
+      Chart.defaults.font.family = "'Inter', sans-serif";
+
+      // Atualiza os Mini KPIs do Período no topo do Gráfico
+      const periodProjects = getProjectsInPeriod();
+      const periodFat = periodProjects.reduce((acc, p) => acc + (+p.valor || 0), 0);
+      const periodCustos = periodProjects.reduce((acc, p) => acc + getCustoTotal(p), 0);
+      const periodLucro = periodFat - periodCustos;
+      const periodMargem = periodFat > 0 ? Math.round((periodLucro / periodFat) * 100) : 0;
+
+      const pFatEl = document.getElementById("period-faturamento-val");
+      const pCustEl = document.getElementById("period-custos-val");
+      const pLucroEl = document.getElementById("period-lucro-val");
+      const pMargEl = document.getElementById("period-margem-label");
+
+      if (pFatEl) pFatEl.textContent = toBRL(periodFat);
+      if (pCustEl) pCustEl.textContent = toBRL(periodCustos);
+      if (pLucroEl) pLucroEl.textContent = toBRL(periodLucro);
+      if (pMargEl) pMargEl.textContent = `${periodMargem}% de margem (${periodProjects.length} obras) · 👆 Detalhar`;
+
+      // 4.1 Gráfico 1: Combo Chart Mensal Filtrado pelo Período Ativo
+      const monthlyData = {};
+      periodProjects.forEach(p => {
+        const key = (p.ini || p.prazo || "2026-01").slice(0, 7);
+        if (!monthlyData[key]) monthlyData[key] = { valor: 0, rec: 0, custos: 0, lucro: 0 };
+        monthlyData[key].valor += (+p.valor || 0);
+        monthlyData[key].rec += (+p.rec || 0);
+        monthlyData[key].custos += getCustoTotal(p);
+        monthlyData[key].lucro += getLucro(p);
+      });
+
+      const monthKeys = Object.keys(monthlyData).sort();
+      const monthNames = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
+      const monthLabels = monthKeys.map(k => `${monthNames[+k.slice(5) - 1]}/${k.slice(2, 4)}`);
+
+      const ctx1 = document.getElementById("chart-monthly");
+      if (ctx1) {
+        activeCharts.push(new Chart(ctx1, {
+          data: {
+            labels: monthLabels,
+            datasets: [
+              {
+                type: "line",
+                label: "Lucro Líquido Real / Projetado",
+                data: monthKeys.map(k => monthlyData[k].lucro),
+                borderColor: doneColor,
+                backgroundColor: doneColor,
+                borderWidth: 3,
+                tension: 0.35,
+                pointRadius: 5,
+                pointBackgroundColor: surfaceColor,
+                pointBorderColor: doneColor,
+                pointBorderWidth: 2.5,
+                pointHoverRadius: 7,
+                order: 1
+              },
+              {
+                type: "bar",
+                label: "Faturamento Contratado",
+                data: monthKeys.map(k => monthlyData[k].valor),
+                backgroundColor: accentColor,
+                borderRadius: 5,
+                order: 2
+              },
+              {
+                type: "bar",
+                label: "Custos Totais (Equipe + Extras)",
+                data: monthKeys.map(k => monthlyData[k].custos),
+                backgroundColor: redColor,
+                borderRadius: 5,
+                order: 3
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { mode: "index", intersect: false },
+            scales: {
+              x: { grid: { display: false } },
+              y: {
+                ticks: {
+                  callback: v => "R$ " + (v >= 1000 ? (v / 1000).toFixed(1) + "k" : v)
+                }
+              }
+            },
+            plugins: {
+              legend: { position: "top" },
+              tooltip: {
+                callbacks: {
+                  label: ctx => ` ${ctx.dataset.label}: ${toBRL(ctx.raw)}`
+                }
+              }
+            }
+          }
+        }));
+      }
+
+      // 4.2 Gráfico 2: Composição Financeira & Destinação (Donut Chart)
+      const ctxComp = document.getElementById("chart-composition");
+      if (ctxComp) {
+        activeCharts.push(new Chart(ctxComp, {
+          type: "doughnut",
+          data: {
+            labels: ["Lucro Líquido LR", "Honorários de Parceiros", "Custos Operacionais & Extras"],
+            datasets: [{
+              data: [Math.max(0, totalLucro), totalCustoResp, totalCustosExtras],
+              backgroundColor: [doneColor, purpleColor, apprColor],
+              borderColor: surfaceColor,
+              borderWidth: 2
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: "68%",
+            plugins: {
+              legend: { position: "bottom" },
+              tooltip: {
+                callbacks: {
+                  label: ctx => {
+                    const pct = totalContratado > 0 ? Math.round((ctx.raw / totalContratado) * 100) : 0;
+                    return ` ${ctx.label}: ${toBRL(ctx.raw)} (${pct}%)`;
+                  }
+                }
+              }
+            }
+          }
+        }));
+      }
+
+      // 4.3 Gráfico 3: Faturamento vs. Repasses por Responsável (Barra Horizontal)
+      const ctxEng = document.getElementById("chart-engineers");
+      if (ctxEng) {
+        activeCharts.push(new Chart(ctxEng, {
+          type: "bar",
+          data: {
+            labels: teamList.map(m => m.name),
+            datasets: [
+              {
+                label: "Faturamento Gerado",
+                data: teamList.map(m => m.totalValor),
+                backgroundColor: accentColor,
+                borderRadius: 4
+              },
+              {
+                label: "Honorários da Pessoa",
+                data: teamList.map(m => m.totalCustoResp),
+                backgroundColor: purpleColor,
+                borderRadius: 4
+              },
+              {
+                label: "Lucro Retido LR",
+                data: teamList.map(m => Math.max(0, m.totalValor - (m.totalCustoResp + m.totalCustosExtras))),
+                backgroundColor: doneColor,
+                borderRadius: 4
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            indexAxis: "y",
+            scales: {
+              x: {
+                ticks: {
+                  callback: v => "R$ " + (v >= 1000 ? (v / 1000).toFixed(0) + "k" : v)
+                }
+              }
+            },
+            plugins: {
+              legend: { position: "top" },
+              tooltip: {
+                callbacks: {
+                  label: ctx => ` ${ctx.dataset.label}: ${toBRL(ctx.raw)}`
+                }
+              }
+            }
+          }
+        }));
+      }
+
+      // 4.4 Gráfico 4: Faturamento por Disciplina (Donut Chart)
+      const disciplineMap = {};
+      AppState.p.forEach(p => {
+        const area = p.area || "Geral";
+        disciplineMap[area] = (disciplineMap[area] || 0) + (+p.valor || 0);
+      });
+
+      const discPalette = [accentColor, apprColor, doneColor, purpleColor, redColor, "#00c875", "#579bfc"];
+      const ctxDisc = document.getElementById("chart-disciplines");
+      if (ctxDisc) {
+        activeCharts.push(new Chart(ctxDisc, {
+          type: "doughnut",
+          data: {
+            labels: Object.keys(disciplineMap),
+            datasets: [{
+              data: Object.values(disciplineMap),
+              backgroundColor: discPalette,
+              borderColor: surfaceColor,
+              borderWidth: 2
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: "65%",
+            plugins: {
+              legend: { position: "right" },
+              tooltip: {
+                callbacks: {
+                  label: ctx => ` ${ctx.label}: ${toBRL(ctx.raw)}`
+                }
+              }
+            }
+          }
+        }));
+      }
+    }
+
+    // ----------------------------------------------------
+    // RENDER: VIEW 4 - CALENDÁRIO OPERACIONAL (TODOS OS PRAZOS)
+    // ----------------------------------------------------
+    let currentCalDate = new Date();
+    currentCalDate.setDate(1);
+    let selectedCalDayStr = TODAY;
+
+    function renderCalendar() {
+      const year = currentCalDate.getFullYear();
+      const month = currentCalDate.getMonth();
+      const firstDayOfWeek = new Date(year, month, 1).getDay();
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+      document.getElementById("cal-month-title").textContent = currentCalDate.toLocaleDateString("pt-BR", {
+        month: "long",
+        year: "numeric"
+      });
+
+      const dayHeaders = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
+      let gridHtml = dayHeaders.map(d => `<div class="cal-day-name">${d}</div>`).join("");
+
+      const totalCells = Math.ceil((firstDayOfWeek + daysInMonth) / 7) * 7;
+      for (let n = 0; n < totalCells; n++) {
+        const cellDate = new Date(year, month, 1 - firstDayOfWeek + n);
+        const cellDateStr = isoDate(cellDate);
+        const isOtherMonth = cellDate.getMonth() !== month;
+        const isCurrentToday = cellDateStr === TODAY;
+        const isSelected = cellDateStr === selectedCalDayStr;
+
+        // Todos os projetos marcados nesta data (concluídos e não concluídos)
+        const dayProjects = AppState.p.filter(p => p.prazo === cellDateStr);
+
+        let chipsHtml = "";
+        if (dayProjects.length) {
+          chipsHtml = `<div class="cal-chips">` +
+            dayProjects.slice(0, 3).map(p => {
+              const isDone = p.st === STATUS_DONE;
+              const isAppr = p.st === STATUS_APPR;
+              const late = isLate(p);
+              const cls = isDone ? "chip-conc" : late ? "chip-late" : isAppr ? "chip-apr" : "chip-dev";
+              const prefix = isDone ? "✓ " : "";
+              return `<span class="cal-chip ${cls}" title="${escapeHTML(p.cli)} - ${escapeHTML(p.obra)} (${escapeHTML(p.st)})">${prefix}${escapeHTML(p.cli)}</span>`;
+            }).join("") +
+            (dayProjects.length > 3 ? `<span class="cal-chip chip-more">+${dayProjects.length - 3} mais</span>` : "") +
+            `</div>`;
+        }
+
+        gridHtml += `
+          <div class="cal-day ${isOtherMonth ? "other-month" : ""} ${isCurrentToday ? "is-today" : ""} ${isSelected ? "is-selected" : ""}" data-date="${cellDateStr}">
+            <span class="cal-num">${cellDate.getDate()}</span>
+            ${chipsHtml}
+          </div>
+        `;
+      }
+
+      document.getElementById("calendar-grid-container").innerHTML = gridHtml;
+
+      renderSelectedDayDeliveries();
+    }
+
+    function renderSelectedDayDeliveries() {
+      const parsedSel = parseDate(selectedCalDayStr);
+      const label = parsedSel.toLocaleDateString("pt-BR", { weekday: "long", day: "numeric", month: "long" });
+      document.getElementById("cal-selected-day-label").textContent = label.charAt(0).toUpperCase() + label.slice(1);
+
+      const deliverables = AppState.p.filter(p => p.prazo === selectedCalDayStr);
+      const container = document.getElementById("cal-day-deliveries-list");
+
+      if (deliverables.length) {
+        container.innerHTML = deliverables.map(p => {
+          const isDone = p.st === STATUS_DONE;
+          const lucro = getLucro(p);
+          return `
+            <div style="padding:12px 0; border-bottom:1px solid var(--bd-light); display:flex; justify-content:space-between; align-items:center; gap:8px;">
+              <div>
+                <b style="display:block; font-size:13.5px; color:var(--tx); ${isDone ? 'opacity:0.85;' : ''}">${isDone ? '✓ ' : ''}${escapeHTML(p.cli)} · ${escapeHTML(p.obra)}</b>
+                <span style="font-size:11.5px; color:var(--tx-dim);">
+                  ${escapeHTML(p.id)} • ${escapeHTML(p.area || "Geral")} 
+                  ${p.resp ? `• Resp: <span class="member-clickable" onclick="openMemberModal('${escapeHTML(p.resp)}')"><b>${escapeHTML(p.resp)}</b></span>` : ""}
+                </span>
+                <div style="font-size:11px; color:var(--tx-dim); margin-top:3px;">
+                  Contratado: ${toBRL(p.valor)} · Honorários: <b style="color:var(--purple);">${toBRL(p.custoResp || 0)}</b> · Lucro: <b style="color:var(--st-done);">${toBRL(lucro)}</b>
+                </div>
+              </div>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span class="status-badge status-${getStatusClass(p.st)}" onclick="cycleStatus('${p.id}', event)" title="Clique para mudar status">
+                  ${escapeHTML(p.st)}
+                </span>
+                <button class="btn btn-ghost btn-icon" onclick="openProjectModal('${p.id}')" title="Inspecionar">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
+                </button>
+              </div>
+            </div>
+          `;
+        }).join("");
+      } else {
+        container.innerHTML = `<div class="empty-state" style="padding:24px 0;">Nenhum prazo de entrega registrado nesta data.</div>`;
+      }
+    }
+
+    document.getElementById("calendar-grid-container").addEventListener("click", e => {
+      const dayEl = e.target.closest(".cal-day");
+      if (dayEl && dayEl.dataset.date) {
+        selectedCalDayStr = dayEl.dataset.date;
+        renderCalendar();
+      }
+    });
+
+    document.getElementById("cal-prev-btn").addEventListener("click", () => {
+      currentCalDate.setMonth(currentCalDate.getMonth() - 1);
+      renderCalendar();
+    });
+
+    document.getElementById("cal-next-btn").addEventListener("click", () => {
+      currentCalDate.setMonth(currentCalDate.getMonth() + 1);
+      renderCalendar();
+    });
+
+    document.getElementById("cal-today-btn").addEventListener("click", () => {
+      currentCalDate = new Date();
+      currentCalDate.setDate(1);
+      selectedCalDayStr = TODAY;
+      renderCalendar();
+    });
+
+    // ----------------------------------------------------
+    // MODAL: RAIO-X DO RESPONSÁVEL / COLABORADOR
+    // ----------------------------------------------------
+    let activeMemberName = null;
+    const memberModal = document.getElementById("member-modal");
+
+    function openMemberModal(name) {
+      if (!name || name === "—" || name === "Não atribuído" || name === "Sem Responsável") {
+        showToast("Selecione uma obra com responsável atribuído para ver o Raio-X.");
+        return;
+      }
+      activeMemberName = name.trim();
+      renderMemberModalData(activeMemberName);
+      memberModal.showModal();
+    }
+
+    function closeMemberModal() {
+      memberModal.close();
+      activeMemberName = null;
+    }
+
+    function renderMemberModalData(name) {
+      const members = getTeamMembersList();
+      const m = members.find(x => x.name.toLowerCase() === name.toLowerCase()) || {
+        name: name,
+        projects: AppState.p.filter(p => p.resp && p.resp.trim().toLowerCase() === name.toLowerCase()),
+        totalValor: 0,
+        totalRec: 0,
+        totalCustoResp: 0,
+        totalCustosExtras: 0,
+        concludedValor: 0,
+        concludedCustoResp: 0,
+        pendingCustoResp: 0,
+        doneCount: 0,
+        devCount: 0,
+        apprCount: 0,
+        lateCount: 0,
+        disciplines: new Set()
+      };
+
+      // Se não encontrou no cache, recalcula para este membro
+      if (!m.totalValor && m.projects.length) {
+        m.projects.forEach(p => {
+          m.totalValor += (+p.valor || 0);
+          m.totalRec += (+p.rec || 0);
+          m.totalCustoResp += (+p.custoResp || 0);
+          m.totalCustosExtras += (+p.custosExtras || 0);
+          if (p.area) m.disciplines.add(p.area);
+          if (p.st === STATUS_DONE) {
+            m.doneCount++;
+            m.concludedValor += (+p.valor || 0);
+            m.concludedCustoResp += (+p.custoResp || 0);
+          } else {
+            if (p.st === STATUS_APPR) m.apprCount++;
+            else m.devCount++;
+            if (isLate(p)) m.lateCount++;
+            m.pendingCustoResp += (+p.custoResp || 0);
+          }
+        });
+      }
+
+      const totalProj = m.projects.length;
+      const pctDone = totalProj ? Math.round((m.doneCount / totalProj) * 100) : 0;
+      const pctDev = totalProj ? Math.round((m.devCount / totalProj) * 100) : 0;
+      const pctAppr = totalProj ? Math.round((m.apprCount / totalProj) * 100) : 0;
+      const pctLate = totalProj ? Math.round((m.lateCount / totalProj) * 100) : 0;
+      const totalLucroLR = m.totalValor - (m.totalCustoResp + m.totalCustosExtras);
+      const margemMediaLR = m.totalValor > 0 ? Math.round((totalLucroLR / m.totalValor) * 100) : 0;
+
+      // Header
+      document.getElementById("member-modal-avatar").textContent = getInitials(m.name);
+      document.getElementById("member-modal-name").textContent = m.name;
+      const discs = Array.from(m.disciplines).filter(Boolean);
+      document.getElementById("member-modal-subtitle").textContent = discs.length 
+        ? `Responsável Técnico · Especialista em ${discs.join(", ")}` 
+        : `Responsável Técnico LR Engenharia`;
+
+      // 4 KPIs
+      document.getElementById("member-modal-kpis").innerHTML = `
+        <div class="member-kpi-card">
+          <span class="member-kpi-label">Obras Atribuídas</span>
+          <div class="member-kpi-val">${totalProj}</div>
+          <span class="member-kpi-sub">${m.doneCount} concluída(s) · ${m.devCount + m.apprCount} ativa(s)</span>
+        </div>
+
+        <div class="member-kpi-card">
+          <span class="member-kpi-label">Faturamento Gerado</span>
+          <div class="member-kpi-val">${toBRL(m.totalValor)}</div>
+          <span class="member-kpi-sub">Total de contratos geridos</span>
+        </div>
+
+        <div class="member-kpi-card" style="border-left: 3px solid var(--purple);">
+          <span class="member-kpi-label" style="color:var(--purple);">Honorários Totais a Pagar</span>
+          <div class="member-kpi-val" style="color:var(--purple);">${toBRL(m.totalCustoResp)}</div>
+          <span class="member-kpi-sub">Remuneração total acordada</span>
+        </div>
+
+        <div class="member-kpi-card" style="border-left: 3px solid var(--st-done);">
+          <span class="member-kpi-label" style="color:var(--st-done);">Honorários Concluídos</span>
+          <div class="member-kpi-val" style="color:var(--st-done);">${toBRL(m.concludedCustoResp)}</div>
+          <span class="member-kpi-sub">+ ${toBRL(m.pendingCustoResp)} em obras ativas</span>
+        </div>
+      `;
+
+      // Barra de Distribuição Operacional
+      document.getElementById("member-completion-rate").textContent = `${pctDone}% Concluído (${m.doneCount}/${totalProj})`;
+      document.getElementById("member-pipeline-bar").innerHTML = `
+        <div class="pipeline-seg seg-done" style="width:${pctDone}%" title="Concluídas: ${m.doneCount}"></div>
+        <div class="pipeline-seg seg-dev" style="width:${pctDev}%" title="Em Desenvolvimento: ${m.devCount}"></div>
+        <div class="pipeline-seg seg-appr" style="width:${pctAppr}%" title="Aguardando Aprovação: ${m.apprCount}"></div>
+        <div class="pipeline-seg seg-late" style="width:${pctLate}%" title="Atrasadas: ${m.lateCount}"></div>
+      `;
+
+      // Tabela de Obras da Pessoa
+      document.getElementById("member-projects-count").textContent = totalProj;
+      const tbody = document.getElementById("member-projects-tbody");
+
+      if (m.projects.length) {
+        tbody.innerHTML = m.projects.map(p => {
+          const late = isLate(p);
+          const lucro = getLucro(p);
+          return `
+            <tr class="${late ? "row-late" : ""}">
+              <td><span class="project-id">${escapeHTML(p.id)}</span></td>
+              <td><b>${escapeHTML(p.cli)}</b> · ${escapeHTML(p.obra)}</td>
+              <td><span class="pill-discipline">${escapeHTML(p.area || "Geral")}</span></td>
+              <td class="${late ? "deadline-text" : ""}">${formatDate(p.prazo)}</td>
+              <td>
+                <span class="status-badge status-${getStatusClass(p.st)}" onclick="cycleStatus('${p.id}', event)" title="Clique para alternar">
+                  ${escapeHTML(p.st)}
+                </span>
+              </td>
+              <td class="num">${toBRL(p.valor)}</td>
+              <td class="num" style="color:var(--purple); font-weight:700;">${toBRL(p.custoResp || 0)}</td>
+              <td class="num" style="color:var(--st-done); font-weight:600;">${toBRL(lucro)}</td>
+              <td>
+                <button class="btn btn-ghost btn-icon" onclick="openProjectModal('${p.id}')" title="Editar valores e notas">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
+                </button>
+              </td>
+            </tr>
+          `;
+        }).join("");
+      } else {
+        tbody.innerHTML = `<tr><td colspan="9" class="empty-state">Nenhum projeto encontrado para este responsável.</td></tr>`;
+      }
+
+      // Rodapé com Resumo
+      document.getElementById("member-footer-summary").innerHTML = `
+        <div>
+          <span style="font-size:12px; color:var(--tx-dim); display:block;">STATUS DOS REPASSES:</span>
+          <b style="font-size:14px; color:var(--st-done);">${toBRL(m.concludedCustoResp)} liberados para repasse</b>
+          <span style="font-size:12px; color:var(--tx-dim);"> · ${toBRL(m.pendingCustoResp)} em execução</span>
+        </div>
+        <div>
+          <span style="font-size:12px; color:var(--tx-dim); display:block;">RETORNO LÍQUIDO PARA A LR:</span>
+          <b style="font-size:14px; color:var(--tx);">${toBRL(totalLucroLR)} (${margemMediaLR}% margem média)</b>
+        </div>
+      `;
+    }
+
+    // ----------------------------------------------------
+    // MODAL DE EDIÇÃO / CADASTRO (INSPETOR TÁTICO)
+    // ----------------------------------------------------
+    let editingId = null;
+    const modal = document.getElementById("project-modal");
+    const form = document.getElementById("project-form");
+
+    function openCurrentProjectMember() {
+      const respName = form.elements["resp"] ? form.elements["resp"].value.trim() : "";
+      if (respName) {
+        openMemberModal(respName);
+      } else {
+        showToast("Digite o nome do responsável para visualizar seu Raio-X.");
+      }
+    }
+
+    function openProjectModal(id = null) {
+      editingId = id;
+      const isEdit = Boolean(id);
+      
+      const project = isEdit 
+        ? AppState.p.find(p => p.id === id)
+        : {
+            cli: "",
+            obra: "",
+            area: "",
+            tipo: "Projeto novo",
+            ini: TODAY,
+            prazo: TODAY,
+            st: STATUS_DEV,
+            valor: 0,
+            rec: 0,
+            resp: "",
+            obs: "",
+            custoResp: 0,
+            custosExtras: 0,
+            custosNotas: ""
+          };
+
+      document.getElementById("modal-project-title").textContent = isEdit ? `Inspecionar ${project.id}` : "Nova Obra / Projeto";
+      document.getElementById("modal-delete-btn").style.display = isEdit ? "block" : "none";
+
+      const fields = ["cli", "obra", "area", "tipo", "ini", "prazo", "st", "valor", "rec", "resp", "obs", "custoResp", "custosExtras", "custosNotas"];
+      fields.forEach(f => {
+        if (form.elements[f]) {
+          form.elements[f].value = project[f] != null ? project[f] : "";
+        }
+      });
+
+      updateCalculatedFields();
+
+      const existingDisciplines = [...new Set(AppState.p.map(p => p.area).filter(Boolean))];
+      document.getElementById("discipline-datalist").innerHTML = existingDisciplines
+        .map(a => `<option value="${escapeHTML(a)}">`).join("");
+
+      modal.showModal();
+    }
+
+    function closeProjectModal() {
+      modal.close();
+      editingId = null;
+    }
+
+    function updateCalculatedFields() {
+      const v = +form.elements["valor"].value || 0;
+      const r = +form.elements["rec"].value || 0;
+      const cResp = +form.elements["custoResp"].value || 0;
+      const cExt = +form.elements["custosExtras"].value || 0;
+
+      const saldo = Math.max(0, v - r);
+      const pct = v > 0 ? Math.min(100, Math.round((r / v) * 100)) : 0;
+      const custoTotal = cResp + cExt;
+      const lucro = v - custoTotal;
+      const margem = v > 0 ? Math.round((lucro / v) * 100) : 0;
+
+      document.getElementById("calc-valor-display").textContent = toBRL(v);
+      document.getElementById("calc-rec-display").textContent = `${toBRL(r)} (${pct}%)`;
+      document.getElementById("calc-saldo-display").textContent = toBRL(saldo);
+      document.getElementById("calc-custoresp-display").textContent = toBRL(cResp);
+      document.getElementById("calc-custosextras-display").textContent = toBRL(cExt);
+      document.getElementById("calc-custototal-display").textContent = toBRL(custoTotal);
+
+      const lucroEl = document.getElementById("calc-lucro-display");
+      lucroEl.textContent = toBRL(lucro);
+      lucroEl.style.color = lucro >= 0 ? "var(--st-done)" : "var(--st-late)";
+
+      const margemPill = document.getElementById("calc-margem-pill");
+      margemPill.textContent = margem + "%";
+      margemPill.className = "margin-pill " + (margem >= 50 ? "" : margem >= 20 ? "margin-warn" : "margin-danger");
+    }
+
+    ["input-valor", "input-rec", "input-custoresp", "input-custosextras"].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.addEventListener("input", updateCalculatedFields);
+    });
+
+    form.onsubmit = e => {
+      e.preventDefault();
+      const vals = {
+        cli: form.elements["cli"].value.trim(),
+        obra: form.elements["obra"].value.trim(),
+        area: form.elements["area"].value.trim(),
+        tipo: form.elements["tipo"].value.trim(),
+        ini: form.elements["ini"].value,
+        prazo: form.elements["prazo"].value,
+        st: form.elements["st"].value,
+        resp: form.elements["resp"].value.trim(),
+        obs: form.elements["obs"].value.trim(),
+        valor: +form.elements["valor"].value || 0,
+        rec: +form.elements["rec"].value || 0,
+        custoResp: +form.elements["custoResp"].value || 0,
+        custosExtras: +form.elements["custosExtras"].value || 0,
+        custosNotas: form.elements["custosNotas"] ? form.elements["custosNotas"].value.trim() : ""
+      };
+
+      if (editingId) {
+        const item = AppState.p.find(p => p.id === editingId);
+        Object.assign(item, vals);
+        showToast(`Obra ${editingId} atualizada com sucesso!`);
+      } else {
+        const nextNum = Math.max(0, ...AppState.p.map(p => +p.id.slice(4) || 0)) + 1;
+        const newId = "PRJ-" + String(nextNum).padStart(4, "0");
+        AppState.p.unshift({ id: newId, ...vals });
+        showToast(`Nova obra ${newId} cadastrada com sucesso!`);
+      }
+
+      saveState();
+      closeProjectModal();
+      refreshAll();
+
+      if (activeMemberName) {
+        renderMemberModalData(activeMemberName);
+      }
+    };
+
+    document.getElementById("modal-delete-btn").addEventListener("click", () => {
+      if (confirm(`Tem certeza que deseja excluir o projeto ${editingId}? Esta ação não pode ser desfeita.`)) {
+        AppState.p = AppState.p.filter(p => p.id !== editingId);
+        saveState();
+        closeProjectModal();
+        refreshAll();
+        showToast("Projeto excluído com sucesso.");
+      }
+    });
+
+    // Ação Rápida de Conclusão de Obra
+    function markCompleted(id) {
+      const p = AppState.p.find(x => x.id === id);
+      if (p) {
+        p.st = STATUS_DONE;
+        saveState();
+        refreshAll();
+        triggerCelebration();
+        showToast(`Obra ${id} concluída com sucesso!`, "🎉");
+      }
+    }
+
+    // Atualização de Todas as Views
+    function refreshAll() {
+      updateUserInfo();
+      renderOverview();
+      renderProjectsTable();
+      renderCalendar();
+      if (document.getElementById("view-fin").classList.contains("active")) {
+        renderFinancialView();
+      }
+    }
+
+    // Inicialização da Aplicação
+    applyTheme(AppState.theme || "light");
+    refreshAll();
+  </script>
+</body>
+</html>
