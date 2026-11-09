@@ -2171,6 +2171,66 @@
       20%, 60% { transform: translateX(-6px); }
       40%, 80% { transform: translateX(6px); }
     }
+
+    /* Barra de Navegação Horizontal das Colunas */
+    .breakdown-scroll-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+      padding: 10px 14px;
+      background: var(--bg-subtle);
+      border: 1px solid var(--bd);
+      border-radius: var(--radius-sm);
+    }
+    .scroll-actions-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-scroll-nav {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 14px;
+      font-size: 12.5px;
+      font-weight: 700;
+      border-radius: 8px;
+      border: 1px solid var(--bd);
+      background: var(--sf);
+      color: var(--tx);
+      cursor: pointer;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      user-select: none;
+    }
+    .btn-scroll-nav:hover {
+      background: var(--bg-subtle);
+      border-color: var(--ac);
+      color: var(--ac);
+      transform: translateY(-1px);
+      box-shadow: 0 3px 8px rgba(0, 115, 234, 0.15);
+    }
+    .btn-scroll-nav:active {
+      transform: scale(0.96);
+    }
+    .btn-scroll-right {
+      background: var(--ac);
+      border-color: var(--ac);
+      color: #ffffff !important;
+    }
+    .btn-scroll-right svg {
+      stroke: #ffffff;
+    }
+    .btn-scroll-right:hover {
+      background: var(--ac-hover);
+      border-color: var(--ac-hover);
+      color: #ffffff !important;
+      box-shadow: 0 4px 12px rgba(0, 115, 234, 0.35);
+    }
+
   </style>
 </head>
 <body>
@@ -2874,10 +2934,22 @@
         <!-- Preenchido via JS -->
       </div>
 
-      <!-- Dica de Rolagem Horizontal -->
-      <div style="display:flex; align-items:center; justify-content:space-between; font-size:11.5px; color:var(--tx-dim); margin-top:12px; padding:0 2px;">
-        <span>💡 <b>Dica:</b> Deslize para o lado para ver todos os custos, margens e ações.</span>
-        <span style="font-family:var(--font-mono); font-size:11px; color:var(--ac); font-weight:600;">← Rolar horizontalmente →</span>
+      <!-- Barra de Controle Interativo de Colunas (Botões de Rolagem) -->
+      <div class="breakdown-scroll-toolbar">
+        <div style="display:flex; align-items:center; gap:8px; font-size:12.5px; color:var(--tx);">
+          <span style="font-size:16px;">💡</span>
+          <span style="font-weight:600;">Navegue pelas colunas para ver custos, valores e ações:</span>
+        </div>
+        <div class="scroll-actions-group">
+          <button type="button" class="btn-scroll-nav btn-scroll-left" onclick="scrollBreakdownTable(-350)" title="Rolar tabela para a esquerda">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg>
+            <span>Rolar Esquerda</span>
+          </button>
+          <button type="button" class="btn-scroll-nav btn-scroll-right" onclick="scrollBreakdownTable(350)" title="Rolar tabela para a direita para ver todas as colunas">
+            <span>Rolar Direita</span>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+          </button>
+        </div>
       </div>
 
       <!-- Tabela Ordenada do Maior para o Menor com Rolagem Horizontal Ativa -->
@@ -2893,7 +2965,18 @@
       </div>
     </div>
 
-    <div class="dialog-actions">
+    <div class="dialog-actions" style="display:flex; justify-content:space-between; align-items:center; gap:12px;">
+      <div class="scroll-actions-group">
+        <span style="font-size:12px; color:var(--tx-dim); font-weight:600;">Navegar colunas:</span>
+        <button type="button" class="btn-scroll-nav btn-scroll-left" onclick="scrollBreakdownTable(-350)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg>
+          <span>Esquerda</span>
+        </button>
+        <button type="button" class="btn-scroll-nav btn-scroll-right" onclick="scrollBreakdownTable(350)">
+          <span>Direita</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+        </button>
+      </div>
       <button type="button" class="btn btn-secondary" onclick="closePeriodBreakdown()">Fechar</button>
     </div>
   </dialog>
@@ -4109,6 +4192,74 @@ e clique em Publicar.`);
       }
 
       breakdownModal.showModal();
+      const scrollBox = document.querySelector(".breakdown-scroll-container");
+      if (scrollBox) {
+        scrollBox.scrollLeft = 0;
+        updateBreakdownScrollButtons();
+        enableDragToScroll(scrollBox);
+      }
+    }
+
+    
+    // ==================== CONTROLE DE ROLAGEM HORIZONTAL DAS TABELAS ====================
+    function scrollBreakdownTable(delta) {
+      const c = document.querySelector(".breakdown-scroll-container");
+      if (c) {
+        c.scrollBy({ left: delta, behavior: "smooth" });
+        setTimeout(updateBreakdownScrollButtons, 350);
+      }
+    }
+
+    function updateBreakdownScrollButtons() {
+      const c = document.querySelector(".breakdown-scroll-container");
+      if (!c) return;
+      const leftBtns = document.querySelectorAll(".btn-scroll-left");
+      const rightBtns = document.querySelectorAll(".btn-scroll-right");
+      
+      const isAtStart = c.scrollLeft <= 10;
+      const isAtEnd = c.scrollLeft + c.clientWidth >= c.scrollWidth - 10;
+
+      leftBtns.forEach(btn => {
+        btn.style.opacity = isAtStart ? "0.4" : "1";
+        btn.style.pointerEvents = isAtStart ? "none" : "auto";
+      });
+      rightBtns.forEach(btn => {
+        btn.style.opacity = isAtEnd ? "0.4" : "1";
+        btn.style.pointerEvents = isAtEnd ? "none" : "auto";
+      });
+    }
+
+    function enableDragToScroll(container) {
+      if (!container || container._hasDragScroll) return;
+      container._hasDragScroll = true;
+      let isDown = false;
+      let startX = 0;
+      let scrollLeft = 0;
+
+      container.addEventListener("mousedown", (e) => {
+        if (e.button !== 0 || e.target.closest("button, a, input, select")) return;
+        isDown = true;
+        container.style.cursor = "grabbing";
+        startX = e.pageX - container.offsetLeft;
+        scrollLeft = container.scrollLeft;
+      });
+
+      window.addEventListener("mouseup", () => {
+        if (!isDown) return;
+        isDown = false;
+        container.style.cursor = "default";
+      });
+
+      container.addEventListener("mousemove", (e) => {
+        if (!isDown) return;
+        e.preventDefault();
+        const x = e.pageX - container.offsetLeft;
+        const walk = (x - startX) * 1.5;
+        container.scrollLeft = scrollLeft - walk;
+        updateBreakdownScrollButtons();
+      });
+
+      container.addEventListener("scroll", updateBreakdownScrollButtons, { passive: true });
     }
 
     function closePeriodBreakdown() {
