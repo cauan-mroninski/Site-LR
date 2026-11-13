@@ -20,8 +20,9 @@
   <!-- Canvas Confetti para celebração tátil ao concluir obras -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
 
-  <!-- Firebase 10 Compat SDK (Banco em Nuvem em Tempo Real) -->
+  <!-- Firebase 10 Compat SDK (Autenticação + Banco em Nuvem em Tempo Real) -->
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 
   <!-- Motor de Efeitos Sites Incríveis -->
@@ -2262,7 +2263,7 @@
           </div>
           <div id="auth-error-msg" class="auth-error" style="display:none;">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-            <span>Senha incorreta. Tente novamente.</span>
+            <span id="auth-error-text">Senha incorreta. Tente novamente.</span>
           </div>
         </div>
 
@@ -3068,34 +3069,7 @@
       return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
     };
 
-    // Base de Dados Original (23 Projetos Reais Preservados com Custos Realistas)
-    const A1 = "ARQ-SAN - Regularização", HS = "Hidrossanitário", EL = "Elétrico", RJ = "Ricardo João de Jesus", FA = "Fernando Aliança", DS = "Dayane de Souza", RF = "Reinaldo Favero", PE = "Projeto entregue";
-    const SEED_DATA = [
-      ["Dona Maria","Casa de madeira",A1,"17/11/2025","17/11/2025",STATUS_DONE,1000,1000,RJ,PE,350,80,"ART R$ 80"],
-      ["Gregor","Casa de madeira",A1,"28/11/2025","28/11/2025",STATUS_DONE,1500,1500,RJ,PE,500,100,"ART + Taxas"],
-      ["Ricardo","Casas geminadas",A1,"25/11/2025","25/11/2025",STATUS_DONE,0,0,FA,PE,0,0,"Parceria direta"],
-      ["Tio Renato","Obra Sarah",A1,"08/12/2025","08/12/2025",STATUS_DONE,800,800,FA,PE,280,60,"Plotagem"],
-      ["Germano","Chalé",A1,"10/02/2026","10/02/2026",STATUS_DONE,600,600,RJ,PE,200,50,"ART"],
-      ["Luis carlos","Casa",A1,"26/01/2026","26/01/2026",STATUS_DONE,700,700,RJ,PE,250,50,"Taxas municipais"],
-      ["Adair","Galpão",A1,"17/03/2026","17/03/2026",STATUS_DONE,700,700,DS,PE,250,50,"ART"],
-      ["Adair","Galpão","PPCI","17/03/2026","17/03/2026",STATUS_DONE,500,500,RJ,PE,180,50,"Taxa bombeiros"],
-      ["João","Casa de alvenaria",A1,"06/04/2026","06/04/2026",STATUS_DONE,1300,1300,RJ,PE,450,90,"ART CREA"],
-      ["Pedro","Casa de madeira",A1,"14/04/2026","14/04/2026",STATUS_DONE,1000,1000,RJ,PE,350,80,"ART + cópias"],
-      ["Valtanir","Casa de alvenaria",A1,"12/05/2026","12/05/2026",STATUS_DONE,1300,1300,RJ,PE,450,90,"ART"],
-      ["Erivelton","Kitnet",A1,"08/06/2026","08/06/2026",STATUS_DEV,4000,1000,DS,"Projeto aguardando",1400,250,"Levantamento topográfico"],
-      ["Silvana","3 casas",A1,"02/07/2026","02/07/2026",STATUS_DONE,3500,3500,DS,PE,1200,200,"ART + Plotagens"],
-      ["João Carlos","Casa de madeira","ARQ-HIS-ELE","05/10/2026","05/10/2026",STATUS_APPR,3000,0,RJ,"Projeto aguardando aprovação",1050,180,"Taxa prefeitura"],
-      ["Externo","Fachada de obra","Arquitetônico","07/04/2026","07/04/2026",STATUS_DONE,350,350,"",PE,0,30,"Plotagem fachada"],
-      ["Vinicius","Documentação",HS,"10/05/2026","10/05/2026",STATUS_DONE,300,300,"",PE,0,30,"Emissão de certidões"],
-      ["Bruna","Residencia",A1,"10/06/2026","10/06/2026",STATUS_DONE,450,450,"",PE,0,40,"Plotagem"],
-      ["Reinaldo","Residencia sons do mar",HS,"21/09/2026","21/09/2026",STATUS_DONE,1000,1000,RF,PE,350,80,"ART projeto hidro"],
-      ["Casiano","Casa de comando",EL,"11/09/2026","11/09/2026",STATUS_DONE,400,400,"",PE,0,40,"Material e taxas"],
-      ["Reinaldo","ELE rodrigo",EL,"21/09/2026","21/09/2026",STATUS_DONE,1000,1000,RF,PE,350,80,"ART projeto elétrico"],
-      ["Reinaldo","ETE Paulo Lopes",HS,"01/10/2026","01/10/2026",STATUS_DONE,500,0,RF,PE,180,40,"ART"],
-      ["Vinicius","ELE campeche",EL,"20/10/2026","20/10/2026",STATUS_DONE,500,0,"","",0,40,"Taxas concessionária"],
-      ["Triches","Edificio Edux",HS,"29/10/2026","29/12/2026",STATUS_DEV,3000,0,"Triches engenharia","",1100,200,"ART + compatibilização BIM"]
-    ];
-
+    // Os projetos reais agora vivem exclusivamente no Firestore autenticado (cockpit/lr-state)
     const convertBRDate = s => s.split("/").reverse().join("-");
 
     // Normalizador de Custos para compatibilidade com dados salvos anteriormente
@@ -3119,37 +3093,25 @@
     let AppState = {
       name: "Lucas",
       theme: "light",
-      p: null
+      p: []
     };
 
     try {
       const stored = localStorage.getItem("lr-v1");
       if (stored) {
         const parsed = JSON.parse(stored);
-        AppState = Object.assign(AppState, parsed);
+        if (parsed && typeof parsed === "object") {
+          if (parsed.name) AppState.name = parsed.name;
+          if (parsed.theme) AppState.theme = parsed.theme;
+          if (Array.isArray(parsed.p)) AppState.p = parsed.p;
+        }
       }
     } catch (e) {
       console.warn("Aviso ao ler localStorage:", e);
     }
 
-    if (!AppState.p || !AppState.p.length) {
-      AppState.p = SEED_DATA.map((r, idx) => ({
-        id: "PRJ-" + String(idx + 5).padStart(4, "0"),
-        cli: r[0],
-        obra: r[1],
-        area: r[2],
-        tipo: "Projeto novo",
-        ini: convertBRDate(r[3]),
-        prazo: convertBRDate(r[4]),
-        st: r[5],
-        valor: +r[6] || 0,
-        rec: +r[7] || 0,
-        resp: r[8] || "",
-        obs: r[9] || "",
-        custoResp: r[10] != null ? +r[10] : 0,
-        custosExtras: r[11] != null ? +r[11] : 0,
-        custosNotas: r[12] || ""
-      }));
+    if (!Array.isArray(AppState.p)) {
+      AppState.p = [];
     } else {
       AppState.p.forEach(ensureCostFields);
     }
@@ -3167,9 +3129,16 @@
 
     const myClientId = "cli_" + Math.random().toString(36).substring(2) + "_" + Date.now();
     let firestoreDb = null;
+    let firestoreUnsub = null;
     let isRemoteUpdating = false;
     let cloudStatus = "connecting";
     let cloudSaveTimeout = null;
+
+    function ensureFirebaseInitialized() {
+      if (typeof firebase !== "undefined" && !firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+      }
+    }
 
     function setSyncBadge(status, label) {
       cloudStatus = status;
@@ -3189,31 +3158,43 @@
       } else if (cloudStatus === "offline" || cloudStatus === "rules-locked") {
         alert(`Sincronização em Nuvem:
 
-O banco de dados do Firebase já está conectado, mas as Regras de Acesso no Firestore precisam permitir gravação.
+O banco de dados do Firebase está protegido.
 
-No Firebase Console > Firestore Database > Regras (Rules), altere para:
-allow read, write: if true;
-e clique em Publicar.`);
+No Firebase Console > Firestore Database > Regras (Rules), confira se a regra é:
+allow read, write: if request.auth != null;
+e faça login no Cockpit.`);
       } else {
         showToast("Conectando ao banco de dados em nuvem...", "📡");
       }
     }
 
+    function stopCloudDatabase() {
+      if (firestoreUnsub) {
+        try { firestoreUnsub(); } catch (e) {}
+        firestoreUnsub = null;
+      }
+      clearTimeout(cloudSaveTimeout);
+    }
+
     function initCloudDatabase() {
       try {
         if (typeof firebase !== "undefined") {
-          if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
+          ensureFirebaseInitialized();
+          if (typeof firebase.auth === "function" && !firebase.auth().currentUser) {
+            setSyncBadge("offline", "Aguardando Login");
+            return;
           }
+          if (firestoreUnsub) return;
+
           firestoreDb = firebase.firestore();
           const docRef = firestoreDb.collection("cockpit").doc("lr-state");
 
           setSyncBadge("connecting", "Conectando...");
 
-          docRef.onSnapshot((doc) => {
+          firestoreUnsub = docRef.onSnapshot((doc) => {
             if (doc.exists) {
               const data = doc.data();
-              if (data && Array.isArray(data.p) && data.p.length > 0) {
+              if (data && Array.isArray(data.p)) {
                 const isFromAnotherClient = data.senderId && data.senderId !== myClientId;
                 const remoteSig = JSON.stringify(data.p);
                 const localSig = JSON.stringify(AppState.p);
@@ -3237,8 +3218,10 @@ e clique em Publicar.`);
               }
               setSyncBadge("synced", "Nuvem Sincronizada");
             } else {
-              console.log("Inicializando base de dados no Firebase...");
-              saveToCloud(true);
+              console.warn("Documento cockpit/lr-state não encontrado no Firestore.");
+              if (AppState.p && AppState.p.length > 0) {
+                saveToCloud(true);
+              }
             }
           }, (err) => {
             console.warn("Aviso Firestore Snapshot:", err);
@@ -3259,6 +3242,7 @@ e clique em Publicar.`);
 
     function saveToCloud(immediate = false) {
       if (!firestoreDb || isRemoteUpdating) return;
+      if (typeof firebase !== "undefined" && typeof firebase.auth === "function" && !firebase.auth().currentUser) return;
 
       setSyncBadge("saving", "Salvando na nuvem...");
 
@@ -5213,57 +5197,124 @@ e clique em Publicar.`);
     }
 
     
-    // ==================== CONTROLE DE ACESSO POR SENHA ====================
-    const VALID_PASSWORDS = ["lr2026", "lr engenharia", "lr123", "lr@2026", "lrengenharia"];
+    // ==================== CONTROLE DE ACESSO SEGURO VIA FIREBASE AUTH ====================
+    const AUTH_ACCOUNT_EMAIL = "acesso@lrengenharia.com";
+    let authListenerAttached = false;
+    let unlockCelebratedThisLogin = false;
 
-    function checkAuthGate() {
-      const isAuth = localStorage.getItem("lr_auth_v1") === "valid" || sessionStorage.getItem("lr_auth_v1") === "valid";
-      const overlay = document.getElementById("auth-gate-overlay");
-      if (overlay) {
-        if (isAuth) {
-          overlay.classList.add("unlocked");
-          document.documentElement.classList.add("lr-authenticated");
-        } else {
-          overlay.classList.remove("unlocked");
-          document.documentElement.classList.remove("lr-authenticated");
-          setTimeout(() => {
-            const pwdInput = document.getElementById("auth-password");
-            if (pwdInput) pwdInput.focus();
-          }, 100);
-        }
+    function setAuthError(msg) {
+      const errorMsg = document.getElementById("auth-error-msg");
+      const errorText = document.getElementById("auth-error-text");
+      if (!errorMsg) return;
+      if (msg) {
+        if (errorText) errorText.textContent = msg;
+        errorMsg.style.display = "flex";
+      } else {
+        errorMsg.style.display = "none";
       }
     }
 
-    function handleAuthSubmit(e) {
+    function applyLockUI(unlocked) {
+      const overlay = document.getElementById("auth-gate-overlay");
+      if (unlocked) {
+        if (overlay) overlay.classList.add("unlocked");
+        document.documentElement.classList.add("lr-authenticated");
+        setAuthError("");
+      } else {
+        if (overlay) overlay.classList.remove("unlocked");
+        document.documentElement.classList.remove("lr-authenticated");
+        setTimeout(() => {
+          const pwdInput = document.getElementById("auth-password");
+          if (pwdInput) pwdInput.focus();
+        }, 100);
+      }
+    }
+
+    function checkAuthGate() {
+      // Remove antiga flag insegura de sessão local caso exista em cache de navegador antigo
+      try {
+        localStorage.removeItem("lr_auth_v1");
+        sessionStorage.removeItem("lr_auth_v1");
+      } catch (e) {}
+
+      if (typeof firebase === "undefined" || typeof firebase.auth !== "function") {
+        applyLockUI(false);
+        setAuthError("Serviço de autenticação indisponível. Recarregue a página.");
+        return;
+      }
+
+      ensureFirebaseInitialized();
+      if (authListenerAttached) return;
+      authListenerAttached = true;
+
+      firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+          applyLockUI(true);
+          initCloudDatabase();
+          if (unlockCelebratedThisLogin) {
+            unlockCelebratedThisLogin = false;
+            showToast("Acesso liberado com sucesso!", "🔓");
+            triggerCelebration();
+          }
+        } else {
+          stopCloudDatabase();
+          AppState.p = [];
+          try {
+            localStorage.removeItem("lr-v1");
+          } catch (e) {}
+          refreshAll();
+          setSyncBadge("offline", "Aguardando Login");
+          applyLockUI(false);
+        }
+      });
+    }
+
+    async function handleAuthSubmit(e) {
       if (e) e.preventDefault();
       const pwdInput = document.getElementById("auth-password");
-      const errorMsg = document.getElementById("auth-error-msg");
       const rememberCheckbox = document.getElementById("auth-remember");
-      const overlay = document.getElementById("auth-gate-overlay");
+      const submitBtn = document.getElementById("auth-submit-btn");
 
       if (!pwdInput) return;
-      const val = pwdInput.value.trim().toLowerCase();
+      const val = pwdInput.value.trim();
+      if (!val) return;
 
-      if (VALID_PASSWORDS.includes(val)) {
-        if (errorMsg) errorMsg.style.display = "none";
-        
-        if (rememberCheckbox && rememberCheckbox.checked) {
-          localStorage.setItem("lr_auth_v1", "valid");
+      if (typeof firebase === "undefined" || typeof firebase.auth !== "function") {
+        setAuthError("Autenticação indisponível offline. Verifique sua conexão.");
+        return;
+      }
+
+      setAuthError("");
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.querySelector("span").textContent = "Verificando...";
+      }
+
+      try {
+        ensureFirebaseInitialized();
+        const persistence = (rememberCheckbox && rememberCheckbox.checked)
+          ? firebase.auth.Auth.Persistence.LOCAL
+          : firebase.auth.Auth.Persistence.SESSION;
+        await firebase.auth().setPersistence(persistence);
+        unlockCelebratedThisLogin = true;
+        await firebase.auth().signInWithEmailAndPassword(AUTH_ACCOUNT_EMAIL, val);
+        pwdInput.value = "";
+      } catch (err) {
+        unlockCelebratedThisLogin = false;
+        const code = err && err.code ? err.code : "";
+        if (code === "auth/too-many-requests") {
+          setAuthError("Muitas tentativas incorretas. Aguarde alguns instantes.");
+        } else if (code === "auth/network-request-failed") {
+          setAuthError("Sem conexão com a internet para validar a senha.");
         } else {
-          sessionStorage.setItem("lr_auth_v1", "valid");
+          setAuthError("Senha incorreta. Tente novamente.");
         }
-
-        if (overlay) {
-          overlay.classList.add("unlocked");
-        }
-        document.documentElement.classList.add("lr-authenticated");
-        showToast("Acesso liberado com sucesso!", "🔓");
-        triggerCelebration();
-      } else {
-        if (errorMsg) {
-          errorMsg.style.display = "flex";
-          pwdInput.focus();
-          pwdInput.select();
+        pwdInput.focus();
+        pwdInput.select();
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.querySelector("span").textContent = "Entrar no Cockpit";
         }
       }
     }
@@ -5281,19 +5332,27 @@ e clique em Publicar.`);
       }
     }
 
-    function lockCockpit() {
+    async function lockCockpit() {
       if (confirm("Deseja bloquear o Cockpit e sair?")) {
-        localStorage.removeItem("lr_auth_v1");
-        sessionStorage.removeItem("lr_auth_v1");
-        document.documentElement.classList.remove("lr-authenticated");
-        const overlay = document.getElementById("auth-gate-overlay");
-        if (overlay) {
-          overlay.classList.remove("unlocked");
-          const pwdInput = document.getElementById("auth-password");
-          if (pwdInput) {
-            pwdInput.value = "";
-            pwdInput.focus();
+        try {
+          if (typeof firebase !== "undefined" && typeof firebase.auth === "function") {
+            await firebase.auth().signOut();
           }
+        } catch (e) {
+          console.warn("Aviso ao sair:", e);
+        }
+        try {
+          localStorage.removeItem("lr_auth_v1");
+          sessionStorage.removeItem("lr_auth_v1");
+          localStorage.removeItem("lr-v1");
+        } catch (e) {}
+        AppState.p = [];
+        refreshAll();
+        applyLockUI(false);
+        const pwdInput = document.getElementById("auth-password");
+        if (pwdInput) {
+          pwdInput.value = "";
+          pwdInput.focus();
         }
         showToast("Cockpit bloqueado.", "🔒");
       }
@@ -5302,7 +5361,6 @@ e clique em Publicar.`);
     // Inicialização da Aplicação
     applyTheme(AppState.theme || "light");
     refreshAll();
-    initCloudDatabase();
     checkAuthGate();
   </script>
 </body>

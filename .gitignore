@@ -1,5 +1,6 @@
 node_modules/
 verificacao/
+package-lock.json
 *.tmp
 .system_generated/
 test_new_features.mjs
